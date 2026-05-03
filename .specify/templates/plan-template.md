@@ -31,7 +31,11 @@
 
 *GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
 
-[Gates determined based on constitution file]
+- [ ] **Code Quality**: Does the technical approach follow established patterns? No hacks planned?
+- [ ] **Testing Standards**: Are TDD and contract tests planned for all new interfaces?
+- [ ] **UX Consistency**: Does the UI/UX design follow project standards and feedback patterns?
+- [ ] **Performance**: Have specific performance targets been defined and resource limits considered?
+- [ ] **Simplicity**: Is this the simplest possible solution? Any over-engineering?
 
 ## Project Structure
 
