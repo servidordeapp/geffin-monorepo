@@ -4,7 +4,60 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Repository State
 
-This monorepo is **specification-only** at this stage — there is no `src/`, `tests/`, package manifest, or build tooling yet. All current artifacts are Markdown specs and SpecKit scaffolding. Implementation will land under `src/` and `tests/` mirroring the `specs/services/` layout once features move past planning.
+This monorepo has a seeded directory structure with the Laravel API bootstrapped. Other services are scaffolded as placeholder directories. Implementation follows the SpecKit workflow (Specify → Plan → Tasks → Implement) per service.
+
+## Monorepo Layout
+
+```
+apps/
+  api-laravel/     ← API Core: Laravel/PHP (financial logic, domain events)
+  bff-school/      ← BFF for school web frontend (Node/Next lightweight server)
+  bff-guardian/    ← BFF for guardian web + mobile
+  ai-gateway/      ← Python: LLM orchestration (observer only, no business logic)
+  gateway/         ← Python: external API gateway (routing, rate limiting, auth)
+  workers-go/      ← Go: RabbitMQ consumers (async, high-throughput)
+
+frontends/
+  school-web/      ← Next.js (React) – school dashboard
+  guardian-web/    ← Next.js (React) – guardian portal
+  guardian-mobile/ ← React Native – guardian mobile app
+
+platform/
+  database/init/   ← PostgreSQL init SQL scripts
+  redis/           ← redis.conf
+  rabbitmq/        ← rabbitmq.conf + enabled_plugins
+  minio/           ← MinIO config
+
+shared/
+  contracts/
+    events/        ← Domain event schemas (PaymentCreated, etc.)
+    http/          ← OpenAPI specs
+  schemas/         ← JSON Schema / Zod validation
+  utils/           ← Shared utility libraries
+  design-system/   ← Shared React UI components
+
+infra/
+  docker/          ← docker-compose.yml (base) + nginx config
+  k8s/             ← Kubernetes manifests
+  terraform/       ← Cloud infra
+  ci/              ← CI/CD pipelines
+
+tools/
+  scripts/         ← Automation scripts
+```
+
+**Request flow:**
+```
+[Mobile/Web Guardian] → bff-guardian  → api-laravel
+[Web School]          → bff-school    → api-laravel
+
+api-laravel → RabbitMQ → workers-go
+api-laravel → Redis (cache/sessions)
+api-laravel → MinIO (file storage)
+
+workers-go  → ai-gateway → LLM insights
+gateway     → external routing → bff-* / api-laravel
+```
 
 A sibling file, `GEMINI.md`, contains the foundational mandate for AI agents in this repo. Treat its directives as authoritative; this file complements it with Claude-Code-specific guidance.
 
@@ -60,19 +113,34 @@ The active feature directory is resolved (in priority order) from `SPECIFY_FEATU
 
 ## Common Commands
 
-There is no language toolchain yet, so build/lint/test commands will be added per service when implementation begins (Laravel, Go, Python, Next.js, React Native each bring their own). Until then, the only repo-level commands are SpecKit slash commands (above) and the bash helpers below.
+Each service brings its own toolchain (Laravel/Composer, Go modules, Python/pip, Node/pnpm). Root-level commands are via `make` and the SpecKit bash helpers.
 
 ```bash
-# Create a feature branch + spec directory + populated spec.md
+# Docker (from repo root)
+make up               # start all services
+make up-workers       # start including queue worker
+make down             # stop all
+make down-volumes     # stop and remove volumes
+make build            # rebuild images
+
+# API Laravel (from repo root)
+make shell            # bash into API container
+make migrate          # run migrations
+make fresh            # migrate:fresh --seed
+make test             # run test suite
+make artisan <cmd>    # any artisan command
+
+# Platform UIs
+make rabbitmq-ui      # print RabbitMQ management URL
+make minio-ui         # print MinIO console URL
+
+# SpecKit feature scaffolding
 .specify/scripts/bash/create-new-feature.sh "Short feature description"
 .specify/scripts/bash/create-new-feature.sh --short-name auth-oauth "Add OAuth2 login"
 .specify/scripts/bash/create-new-feature.sh --dry-run "..."     # compute names without side effects
 
-# Set up plan.md / tasks.md scaffolding for the current feature
 .specify/scripts/bash/setup-plan.sh
 .specify/scripts/bash/setup-tasks.sh
-
-# Verify environment is ready for the next stage
 .specify/scripts/bash/check-prerequisites.sh
 ```
 

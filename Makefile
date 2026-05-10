@@ -1,34 +1,56 @@
-.PHONY: up down build shell artisan tinker migrate fresh test logs
+COMPOSE := docker compose
+API     := $(COMPOSE) exec api
 
+.PHONY: up down build shell artisan tinker migrate fresh test logs \
+        up-workers down-workers rabbitmq-ui minio-ui
+
+# ─── Lifecycle ────────────────────────────────────────────────────────────────
 up:
-	docker compose up -d
+	$(COMPOSE) up -d
+
+up-workers:
+	$(COMPOSE) --profile worker up -d
 
 down:
-	docker compose down
+	$(COMPOSE) down
+
+down-volumes:
+	$(COMPOSE) down -v
 
 build:
-	docker compose build --no-cache
+	$(COMPOSE) build --no-cache
 
+# ─── API Laravel ──────────────────────────────────────────────────────────────
 shell:
-	docker compose exec app bash
+	$(API) bash
 
 artisan:
-	docker compose exec app php artisan $(filter-out $@,$(MAKECMDGOALS))
+	$(API) php artisan $(filter-out $@,$(MAKECMDGOALS))
 
 tinker:
-	docker compose exec app php artisan tinker
+	$(API) php artisan tinker
 
 migrate:
-	docker compose exec app php artisan migrate
+	$(API) php artisan migrate
 
 fresh:
-	docker compose exec app php artisan migrate:fresh --seed
+	$(API) php artisan migrate:fresh --seed
 
 test:
-	docker compose exec app php artisan test
+	$(API) php artisan test
 
 logs:
-	docker compose logs -f app
+	$(COMPOSE) logs -f api
+
+# ─── Platform UIs ─────────────────────────────────────────────────────────────
+rabbitmq-ui:
+	@echo "RabbitMQ Management → http://localhost:15672  (gfn / secret)"
+
+minio-ui:
+	@echo "MinIO Console → http://localhost:9001  (gfn / secret123)"
+
+mailpit-ui:
+	@echo "Mailpit → http://localhost:8025"
 
 %:
 	@:
