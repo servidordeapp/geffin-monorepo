@@ -154,3 +154,8 @@ To work on an existing feature without checking out the branch, set `SPECIFY_FEA
 - **Cross-domain effects ride events**, not synchronous calls. Side-effecting handlers must be idempotent.
 - **AI features observe, never mutate** — no business decisions inside the AI Gateway.
 - **Templates live in `.specify/templates/`** with an override stack (`overrides/` → presets → extensions → core); prefer adding an override file over editing core templates.
+
+<!-- SPECKIT START -->
+For additional context about technologies to be used, project structure,
+shell commands, and other important information, read the current plan
+<!-- SPECKIT END -->
