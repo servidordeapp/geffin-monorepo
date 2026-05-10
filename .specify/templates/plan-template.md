@@ -31,7 +31,15 @@
 
 *GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
 
-[Gates determined based on constitution file]
+| # | Principle | Check |
+|---|-----------|-------|
+| I | **Code Quality** — Single responsibility, explicit naming, no dead code, linting enforced, no opportunistic refactors, complexity justified. | ☐ |
+| II | **Testing Standards (TDD)** — Failing test written first; financial paths use real DB integration tests; contract tests for all APIs/events. | ☐ |
+| III | **UX Consistency** — Design-system components used; `{ data, meta, errors }` envelope; actionable errors; WCAG 2.1 AA; offline guardian flows. | ☐ |
+| IV | **Performance Requirements** — Sync endpoints < 200ms p95; cross-domain effects via RabbitMQ; Redis cache strategy documented; bulk ops via workers. | ☐ |
+| V | **Simplicity (YAGNI)** — No speculative abstractions; no feature flags for hypothetical callers; patterns justified over simpler alternatives. | ☐ |
+
+> Any unchecked gate with a violation MUST be documented in the Complexity Tracking table below.
 
 ## Project Structure
 
