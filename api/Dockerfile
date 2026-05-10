@@ -1,11 +1,12 @@
-FROM php:8.3-fpm
+FROM php:8.5-fpm
 
 RUN apt-get update && apt-get install -y \
     git curl zip unzip \
-    libpq-dev libzip-dev libpng-dev libonig-dev libxml2-dev \
+    libpq-dev libzip-dev libpng-dev libjpeg-dev libonig-dev libxml2-dev libicu-dev \
+    && docker-php-ext-configure gd --with-jpeg \
     && docker-php-ext-install \
         pdo pdo_pgsql pgsql \
-        bcmath gd zip opcache pcntl \
+        bcmath gd zip pcntl intl \
     && pecl install redis \
     && docker-php-ext-enable redis \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
