@@ -64,10 +64,6 @@ A sibling file, `GEMINI.md`, contains the foundational mandate for AI agents in 
 ## Authoritative Documents (read before non-trivial work)
 
 - `.specify/memory/constitution.md` — project constitution. Five non-negotiable principles: Code Quality, Testing Standards (TDD), UX Consistency, Performance, Simplicity (YAGNI). Any plan must verify against this before execution.
-- `specs/architecture/system-overview.md` — components and their responsibilities.
-- `specs/architecture/tech-stack.md` — approved languages/frameworks per component.
-- `specs/architecture/communication.md` — REST (sync) vs RabbitMQ (async) usage rules.
-- `specs/architecture/principles.md` — eight architectural rules (event-driven first, BFF pattern, idempotency, auditability, etc.).
 
 ## High-Level Architecture
 
@@ -82,6 +78,19 @@ GFN is a multi-tenant financial hub for schools. The target runtime is a **modul
 - **Frontends** — Next.js (web, schools + guardians), React Native (mobile, guardians).
 
 Cross-domain side effects MUST flow through RabbitMQ events, not direct service calls. Every financial transaction MUST be auditable and idempotent.
+
+## Architectural Principles
+
+Eight non-negotiable rules governing all services in this system:
+
+1. **Separation of Concerns** — Each service has a single clear responsibility. Cross-cutting logic belongs in shared libraries, not spread across services.
+2. **Event-Driven First** — All cross-domain actions MUST be triggered via RabbitMQ events, not synchronous service-to-service calls.
+3. **Financial Consistency** — Financial data MUST be accurate and auditable. Every mutation produces an audit log entry.
+4. **AI as Observer** — The AI Gateway MUST NOT own or mutate business state. It observes events and enriches data only.
+5. **BFF Pattern** — Frontends MUST NOT call the API Core directly. All client traffic goes through a BFF (bff-school or bff-guardian).
+6. **Stateless Services** — Services MUST NOT rely on in-memory state. All state lives in PostgreSQL, Redis, or RabbitMQ.
+7. **Idempotency** — All operations exposed to retries (queue consumers, API endpoints) MUST be idempotent.
+8. **Auditability** — Every financial transaction MUST be traceable end-to-end with a full audit trail.
 
 ## SpecKit Workflow (how features are built here)
 
