@@ -1,3 +1,21 @@
+<div align="center">
+
+```text
+╔═══════════════════════════════════════════════════╗
+║                                                   ║
+║   ██████╗ ███████╗███████╗███████╗██╗███╗   ██╗   ║
+║  ██╔════╝ ██╔════╝██╔════╝██╔════╝██║████╗  ██║   ║
+║  ██║  ███╗█████╗  █████╗  █████╗  ██║██╔██╗ ██║   ║
+║  ██║   ██║██╔══╝  ██╔══╝  ██╔══╝  ██║██║╚██╗██║   ║
+║  ╚██████╔╝███████╗██║     ██║     ██║██║ ╚████║   ║
+║   ╚═════╝ ╚══════╝╚═╝     ╚═╝     ╚═╝╚═╝  ╚═══╝   ║
+║                                                   ║
+║  Financial Infrastructure for Education Payments  ║
+║                                                   ║
+╚═══════════════════════════════════════════════════╝
+```
+</div>
+
 # Geffin Monorepo
 
 Multi-tenant financial hub for schools. Handles payments, billing, and financial operations for educational institutions — connecting schools and guardians through dedicated frontends backed by a Laravel API core.
