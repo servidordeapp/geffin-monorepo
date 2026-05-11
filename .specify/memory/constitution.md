@@ -1,19 +1,13 @@
 <!-- SYNC IMPACT REPORT
-Version change: [TEMPLATE] → 1.0.0
+Version change: 1.0.0 → 1.1.0
 Added principles:
-  - I. Code Quality (new)
-  - II. Testing Standards — TDD (new, NON-NEGOTIABLE)
-  - III. UX Consistency (new)
-  - IV. Performance Requirements (new)
-  - V. Simplicity — YAGNI (new)
-Added sections:
-  - Quality Gates (new)
-  - Development Workflow (new)
+  - VI. Module Isolation — API Core Bounded Contexts (new)
+Added quality gates:
+  - Module Boundary Check (new)
+Updated quality gates:
+  - Constitution Check: "five" → "six" Core Principles
 Removed sections: none
-Templates updated:
-  - .specify/templates/plan-template.md ✅ (Constitution Check gates filled)
-  - .specify/templates/spec-template.md ✅ (no changes required)
-  - .specify/templates/tasks-template.md ✅ (no changes required)
+Templates updated: none (no template interpolation relies on principle count)
 Deferred TODOs: none
 -->
 
@@ -109,15 +103,38 @@ Build what is needed now, not what might be needed later.
   alternative has been explicitly rejected with documented justification.
 - When in doubt, choose the solution with fewer moving parts.
 
+### VI. Module Isolation — API Core Bounded Contexts
+
+The API Core is a modular monolith. Each of its six domain modules (Financial, Billing,
+Contracts, Students, Canteen, Commerce) is a bounded context and MUST be treated as an
+autonomous unit.
+
+- Each module MUST own its controllers, models, services, events, listeners, request
+  validators, and API resource transformers. No module may share these with another module.
+- A module MUST NOT import `Models`, `Services`, or `Controllers` from a sibling module.
+  Cross-module reads MUST go through a Query Service interface published by the owning module.
+  Cross-module writes MUST use RabbitMQ domain events, never direct method calls.
+- `Modules/Shared/` is the sole sanctioned cross-module import within the API Core. It MUST
+  contain only value objects, base classes, and reusable traits — never domain logic or
+  Eloquent models belonging to a specific domain.
+- Each module MUST register its own `ServiceProvider` that wires routes, bindings, and
+  listeners. The provider MUST be the module's only entry point in `config/app.php`.
+- Database migrations MUST be stored in `database/migrations/<Module>/` to make module
+  ownership explicit and prevent cross-module schema coupling.
+- Feature work spanning multiple modules MUST be broken into per-module tasks in `tasks.md`.
+  A single task MUST NOT touch more than one module's internals.
+
 ## Quality Gates
 
 All pull requests MUST pass the following gates before merge:
 
 - **CI Green**: linting, formatting, type-checking, and full test suite pass without
   suppression.
-- **Constitution Check**: the plan and implementation have been verified against all five Core
+- **Constitution Check**: the plan and implementation have been verified against all six Core
   Principles. Performed at plan creation (before Phase 0 research) and re-validated after
   design (after Phase 1).
+- **Module Boundary Check**: any PR touching `app/Modules/` MUST be reviewed for cross-module
+  imports. Direct inter-module class references are a blocking violation.
 - **Financial Review**: any change touching payment, wallet, billing, or audit logic requires
   peer review from a second engineer.
 - **Performance Gate**: changes to synchronous API endpoints or hot-path consumers must
@@ -166,4 +183,4 @@ deferred.
 
 For runtime development guidance and toolchain commands, refer to `CLAUDE.md`.
 
-**Version**: 1.0.0 | **Ratified**: 2026-05-10 | **Last Amended**: 2026-05-10
+**Version**: 1.1.0 | **Ratified**: 2026-05-10 | **Last Amended**: 2026-05-10
