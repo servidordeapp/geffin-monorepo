@@ -1,0 +1,50 @@
+/* GFN Design Tokens — import this in app CSS alongside @import "tailwindcss" */
+
+@theme {
+  /* ── Brand Colors ── */
+  --color-brand-primary-900: #0B2E5C;
+  --color-brand-primary-700: #1E40AF;
+  --color-brand-primary-500: #3B82F6;
+  --color-brand-primary-100: #DBEAFE;
+  --color-brand-primary-50:  #EFF6FF;
+
+  /* ── Accent — Green ── */
+  --color-accent-green-700: #047857;
+  --color-accent-green-500: #10B981;
+  --color-accent-green-100: #D1FAE5;
+
+  /* ── Neutrals ── */
+  --color-neutral-0:   #FFFFFF;
+  --color-neutral-50:  #F8FAFC;
+  --color-neutral-100: #F1F5F9;
+  --color-neutral-200: #E2E8F0;
+  --color-neutral-400: #94A3B8;
+  --color-neutral-600: #475569;
+  --color-neutral-900: #0F172A;
+
+  /* ── Semantic ── */
+  --color-semantic-success: #10B981;
+  --color-semantic-warning: #F59E0B;
+  --color-semantic-danger:  #EF4444;
+  --color-semantic-info:    #3B82F6;
+
+  /* ── Typography ── */
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+
+  /* ── Border Radius ──
+     sm  (6px)  admin inputs / secondary buttons
+     md  (8px)  admin cards / admin primary buttons
+     lg  (12px) guardian inputs / guardian buttons
+     xl  (16px) guardian cards
+  */
+  --radius-sm:   0.375rem;
+  --radius-md:   0.5rem;
+  --radius-lg:   0.75rem;
+  --radius-xl:   1rem;
+  --radius-full: 9999px;
+
+  /* ── Shadows ── */
+  --shadow-sm: 0 1px 2px rgb(15 23 42 / 0.06);
+  --shadow-md: 0 4px 12px rgb(15 23 42 / 0.08);
+  --shadow-lg: 0 12px 32px rgb(15 23 42 / 0.12);
+}

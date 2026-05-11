@@ -1,0 +1,84 @@
+@import "tailwindcss";
+@import "./tokens.css";
+
+@layer base {
+  *, *::before, *::after {
+    box-sizing: border-box;
+  }
+
+  body {
+    font-family: var(--font-sans);
+    color: var(--color-neutral-900);
+    background-color: var(--color-neutral-0);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}
+
+/* ── Typography utilities ──
+   These are semantic scale tokens from the design spec.
+   Use them for content typography (headings, body), not UI component internals.
+*/
+
+@utility text-display-lg {
+  font-size: 2rem;
+  line-height: 2.5rem;
+  font-weight: 700;
+}
+
+@utility text-heading-xl {
+  font-size: 1.5rem;
+  line-height: 2rem;
+  font-weight: 700;
+}
+
+@utility text-heading-lg {
+  font-size: 1.25rem;
+  line-height: 1.75rem;
+  font-weight: 600;
+}
+
+@utility text-heading-md {
+  font-size: 1rem;
+  line-height: 1.5rem;
+  font-weight: 600;
+}
+
+@utility text-body-lg {
+  font-size: 1rem;
+  line-height: 1.5rem;
+  font-weight: 400;
+}
+
+@utility text-body-md {
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  font-weight: 400;
+}
+
+@utility text-body-sm {
+  font-size: 0.8125rem;
+  line-height: 1.125rem;
+  font-weight: 400;
+}
+
+@utility text-label-md {
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  font-weight: 500;
+}
+
+/* tabular-nums is mandatory for all monetary values */
+@utility text-numeric-hero {
+  font-size: 2.25rem;
+  line-height: 2.75rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+@utility text-numeric-lg {
+  font-size: 1.25rem;
+  line-height: 1.75rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
