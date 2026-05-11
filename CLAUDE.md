@@ -210,4 +210,5 @@ To work on an existing feature without checking out the branch, set `SPECIFY_FEA
 <!-- SPECKIT START -->
 For additional context about technologies to be used, project structure,
 shell commands, and other important information, read the current plan
+at `specs/001-epic-auth/plan.md`.
 <!-- SPECKIT END -->
