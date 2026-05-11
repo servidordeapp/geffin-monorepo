@@ -10,7 +10,7 @@ This monorepo has a seeded directory structure with the Laravel API bootstrapped
 
 ```
 apps/
-  api-laravel/     ← API Core: Laravel/PHP (financial logic, domain events)
+  api-laravel/     ← API Core: Laravel/PHP — modular monolith, six isolated domain modules
   bff-school/      ← BFF for school web frontend (Node/Next lightweight server)
   bff-guardian/    ← BFF for guardian web + mobile
   ai-gateway/      ← Python: LLM orchestration (observer only, no business logic)
@@ -65,11 +65,53 @@ A sibling file, `GEMINI.md`, contains the foundational mandate for AI agents in 
 
 - `.specify/memory/constitution.md` — project constitution. Five non-negotiable principles: Code Quality, Testing Standards (TDD), UX Consistency, Performance, Simplicity (YAGNI). Any plan must verify against this before execution.
 
+## API Laravel — Module Structure
+
+The API Core is a **modular monolith**. Each domain lives in its own module under `app/Modules/` and is treated as an isolated bounded context.
+
+```
+app/
+  Modules/
+    Financial/    ← wallet, payments, audit trail, ledger entries
+    Billing/      ← invoices, charges, subscriptions, payment plans
+    Contracts/    ← school contracts, terms, agreements
+    Students/     ← enrollment, profiles, guardians
+    Canteen/      ← menus, food items, canteen orders
+    Commerce/     ← marketplace, products, catalog, orders
+    Shared/       ← cross-module value objects, base classes, traits
+```
+
+Each module owns its own:
+
+```
+<Module>/
+  Controllers/    ← HTTP handlers (thin; delegate to Services)
+  Models/         ← Eloquent models scoped to this module
+  Services/       ← domain logic and orchestration
+  Events/         ← domain events emitted by this module
+  Listeners/      ← handles events from RabbitMQ (this module only)
+  Requests/       ← Form Request validation
+  Resources/      ← API Resource transformers
+  Policies/       ← Authorization policies
+  routes.php      ← route definitions for this module
+  Providers/
+    <Module>ServiceProvider.php  ← registers routes, bindings, listeners
+```
+
+**Module isolation rules (non-negotiable):**
+
+- A module MUST NOT import `Models`, `Services`, or `Controllers` from another module.
+- Cross-module reads go through a dedicated Query Service interface published by the owning module.
+- Cross-module writes MUST use RabbitMQ domain events, not direct method calls.
+- `Modules/Shared/` is the only cross-module import allowed within the API; it MUST contain only value objects, base classes, and reusable traits — never domain logic.
+- Each module MUST have its own `ServiceProvider` registered in `config/app.php`.
+- Migrations that belong to a module are stored in `database/migrations/<module>/` to make ownership explicit.
+
 ## High-Level Architecture
 
 GFN is a multi-tenant financial hub for schools. The target runtime is a **modular monolith + event-driven satellites**:
 
-- **API Core (Laravel/PHP)** — authoritative business logic and financial consistency; emits domain events.
+- **API Core (Laravel/PHP)** — authoritative business logic split into six isolated domain modules; emits domain events.
 - **BFF Guardian / BFF School (per-client backends)** — frontends do **not** call the core API directly; they go through a BFF.
 - **Workers (Go)** — consume RabbitMQ events for async/high-throughput work.
 - **AI Gateway (Python, FastAPI/Flask)** — LLM orchestration. AI is an *observer*; it must not own business logic.
@@ -91,6 +133,7 @@ Eight non-negotiable rules governing all services in this system:
 6. **Stateless Services** — Services MUST NOT rely on in-memory state. All state lives in PostgreSQL, Redis, or RabbitMQ.
 7. **Idempotency** — All operations exposed to retries (queue consumers, API endpoints) MUST be idempotent.
 8. **Auditability** — Every financial transaction MUST be traceable end-to-end with a full audit trail.
+9. **Module Isolation** — Within the API Core, each domain module (Financial, Billing, Contracts, Students, Canteen, Commerce) is a bounded context. Modules MUST NOT directly import one another's internals. Cross-module reads go through published Query Service interfaces; cross-module writes go through RabbitMQ events.
 
 ## SpecKit Workflow (how features are built here)
 
