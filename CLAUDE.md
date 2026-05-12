@@ -64,6 +64,7 @@ A sibling file, `GEMINI.md`, contains the foundational mandate for AI agents in 
 ## Authoritative Documents (read before non-trivial work)
 
 - `.specify/memory/constitution.md` — project constitution. Five non-negotiable principles: Code Quality, Testing Standards (TDD), UX Consistency, Performance, Simplicity (YAGNI). Any plan must verify against this before execution.
+- `docs/design/01-handoff-dev.md` — design handoff for the initial screens (Login + Dashboard × 3 apps). Contains design tokens, component contracts, per-screen layout specs, a11y checklist, and animation rules. Read before any frontend work in `frontends/` or `shared/design-system/`.
 
 ## Frontend Skills (mandatory)
 
