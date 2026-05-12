@@ -1,4 +1,4 @@
-import { Body, Controller, Headers, Post } from '@nestjs/common';
+import { Body, Controller, Get, Headers, Param, Post, Query } from '@nestjs/common';
 import { AuthService } from './auth.service';
 
 @Controller('auth')
@@ -24,5 +24,19 @@ export class AuthController {
   @Post('reset-password')
   resetPassword(@Body() body: { token: string; email: string; password: string; password_confirmation: string }) {
     return this.authService.resetPassword(body);
+  }
+
+  @Get('verify-email/:id/:hash')
+  verifyEmail(
+    @Param('id') id: string,
+    @Param('hash') hash: string,
+    @Query() query: Record<string, string>,
+  ) {
+    return this.authService.verifyEmail(id, hash, query);
+  }
+
+  @Post('resend-verification')
+  resendVerification(@Body() body: { email: string }) {
+    return this.authService.resendVerification(body);
   }
 }

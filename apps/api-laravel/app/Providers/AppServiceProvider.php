@@ -25,12 +25,12 @@ class AppServiceProvider extends ServiceProvider
 
         RateLimiter::for('resend.guardian', function (Request $request) {
             return Limit::perMinute(1)
-                ->by('user:'.$request->user('guardian')?->id);
+                ->by('email:'.$request->input('email'));
         });
 
         RateLimiter::for('resend.admin', function (Request $request) {
             return Limit::perMinute(1)
-                ->by('user:'.$request->user('admin')?->id);
+                ->by('email:'.$request->input('email'));
         });
     }
 }

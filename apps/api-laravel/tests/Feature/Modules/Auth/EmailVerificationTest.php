@@ -1,5 +1,7 @@
 <?php
 
+namespace Tests\Feature\Modules\Auth;
+
 use App\Modules\Administration\Events\SchoolAdminCreated;
 use App\Modules\Administration\Models\SchoolAdmin;
 use App\Modules\Auth\Notifications\AdminEmailVerificationNotification;
@@ -7,117 +9,143 @@ use App\Modules\Auth\Notifications\GuardianEmailVerificationNotification;
 use App\Modules\Students\Events\GuardianCreated;
 use App\Modules\Students\Models\Guardian;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\URL;
+use Tests\TestCase;
 
-uses(RefreshDatabase::class);
+class EmailVerificationTest extends TestCase
+{
+    use RefreshDatabase;
 
-test('GuardianCreated event triggers verification email', function () {
-    Notification::fake();
+    public function test_guardian_created_event_triggers_verification_email(): void
+    {
+        Notification::fake();
 
-    $guardian = Guardian::factory()->create(['email_verified_at' => null]);
+        $guardian = Guardian::factory()->create(['email_verified_at' => null]);
 
-    event(new GuardianCreated($guardian));
+        event(new GuardianCreated($guardian));
 
-    Notification::assertSentTo($guardian, GuardianEmailVerificationNotification::class);
-});
+        Notification::assertSentTo($guardian, GuardianEmailVerificationNotification::class);
+    }
 
-test('valid signed URL verifies guardian email', function () {
-    $guardian = Guardian::factory()->create(['email_verified_at' => null]);
+    public function test_valid_signed_url_verifies_guardian_email(): void
+    {
+        $guardian = Guardian::factory()->create(['email_verified_at' => null]);
 
-    $url = URL::temporarySignedRoute(
-        'guardian.verification.verify',
-        now()->addHours(144),
-        ['id' => $guardian->id, 'hash' => sha1($guardian->email)]
-    );
+        $url = URL::temporarySignedRoute(
+            'guardian.verification.verify',
+            now()->addHours(144),
+            ['id' => $guardian->id, 'hash' => sha1($guardian->email)]
+        );
 
-    $path = parse_url($url, PHP_URL_PATH).'?'.parse_url($url, PHP_URL_QUERY);
+        $path = parse_url($url, PHP_URL_PATH).'?'.parse_url($url, PHP_URL_QUERY);
 
-    $response = $this->getJson($path);
+        $response = $this->getJson($path);
 
-    $response->assertStatus(200);
-    expect($guardian->fresh()->hasVerifiedEmail())->toBeTrue();
-});
+        $response->assertStatus(200);
+        $this->assertTrue($guardian->fresh()->hasVerifiedEmail());
+    }
 
-test('expired verification link returns 400 LINK_EXPIRED', function () {
-    $guardian = Guardian::factory()->create(['email_verified_at' => null]);
+    public function test_expired_verification_link_returns_400_link_expired(): void
+    {
+        $guardian = Guardian::factory()->create(['email_verified_at' => null]);
 
-    $url = URL::temporarySignedRoute(
-        'guardian.verification.verify',
-        now()->subHour(),
-        ['id' => $guardian->id, 'hash' => sha1($guardian->email)]
-    );
+        $url = URL::temporarySignedRoute(
+            'guardian.verification.verify',
+            now()->subHour(),
+            ['id' => $guardian->id, 'hash' => sha1($guardian->email)]
+        );
 
-    $path = parse_url($url, PHP_URL_PATH).'?'.parse_url($url, PHP_URL_QUERY);
+        $path = parse_url($url, PHP_URL_PATH).'?'.parse_url($url, PHP_URL_QUERY);
 
-    $response = $this->getJson($path);
+        $response = $this->getJson($path);
 
-    $response->assertStatus(400)
-        ->assertJsonFragment(['code' => 'LINK_EXPIRED']);
-});
+        $response->assertStatus(400)
+            ->assertJsonFragment(['code' => 'LINK_EXPIRED']);
+    }
 
-test('already verified guardian returns 400 EMAIL_ALREADY_VERIFIED', function () {
-    $guardian = Guardian::factory()->create(['email_verified_at' => now()]);
+    public function test_already_verified_guardian_returns_400_email_already_verified(): void
+    {
+        $guardian = Guardian::factory()->create(['email_verified_at' => now()]);
 
-    $url = URL::temporarySignedRoute(
-        'guardian.verification.verify',
-        now()->addHours(144),
-        ['id' => $guardian->id, 'hash' => sha1($guardian->email)]
-    );
+        $url = URL::temporarySignedRoute(
+            'guardian.verification.verify',
+            now()->addHours(144),
+            ['id' => $guardian->id, 'hash' => sha1($guardian->email)]
+        );
 
-    $path = parse_url($url, PHP_URL_PATH).'?'.parse_url($url, PHP_URL_QUERY);
+        $path = parse_url($url, PHP_URL_PATH).'?'.parse_url($url, PHP_URL_QUERY);
 
-    $response = $this->getJson($path);
+        $response = $this->getJson($path);
 
-    $response->assertStatus(400)
-        ->assertJsonFragment(['code' => 'EMAIL_ALREADY_VERIFIED']);
-});
+        $response->assertStatus(400)
+            ->assertJsonFragment(['code' => 'EMAIL_ALREADY_VERIFIED']);
+    }
 
-test('resend verification sends email and returns 200', function () {
-    Notification::fake();
+    public function test_resend_verification_sends_email_and_returns_200(): void
+    {
+        Notification::fake();
 
-    $guardian = Guardian::factory()->create(['email_verified_at' => null]);
-    $token = $guardian->createToken('auth')->plainTextToken;
+        $guardian = Guardian::factory()->create(['email_verified_at' => null]);
 
-    $response = $this->withHeader('Authorization', "Bearer {$token}")
-        ->postJson('/api/v1/guardian/auth/resend-verification');
+        $response = $this->postJson('/api/v1/guardian/auth/resend-verification', [
+            'email' => $guardian->email,
+        ]);
 
-    $response->assertStatus(200);
-    Notification::assertSentTo($guardian, GuardianEmailVerificationNotification::class);
-});
+        $response->assertStatus(200);
+        Notification::assertSentTo($guardian, GuardianEmailVerificationNotification::class);
+    }
 
-test('resend when already verified returns 400', function () {
-    $guardian = Guardian::factory()->create(['email_verified_at' => now()]);
-    $token = $guardian->createToken('auth')->plainTextToken;
+    public function test_resend_for_already_verified_email_returns_generic_200(): void
+    {
+        Notification::fake();
 
-    $response = $this->withHeader('Authorization', "Bearer {$token}")
-        ->postJson('/api/v1/guardian/auth/resend-verification');
+        $guardian = Guardian::factory()->create(['email_verified_at' => now()]);
 
-    $response->assertStatus(400)
-        ->assertJsonFragment(['code' => 'EMAIL_ALREADY_VERIFIED']);
-});
+        $response = $this->postJson('/api/v1/guardian/auth/resend-verification', [
+            'email' => $guardian->email,
+        ]);
 
-test('second resend within 1 minute returns 429', function () {
-    $guardian = Guardian::factory()->create(['email_verified_at' => null]);
-    $token = $guardian->createToken('auth')->plainTextToken;
+        $response->assertStatus(200);
+        Notification::assertNothingSent();
+    }
 
-    $this->withHeader('Authorization', "Bearer {$token}")
-        ->postJson('/api/v1/guardian/auth/resend-verification');
+    public function test_resend_for_unknown_email_returns_generic_200(): void
+    {
+        Notification::fake();
 
-    $response = $this->withHeader('Authorization', "Bearer {$token}")
-        ->postJson('/api/v1/guardian/auth/resend-verification');
+        $response = $this->postJson('/api/v1/guardian/auth/resend-verification', [
+            'email' => 'nonexistent@example.com',
+        ]);
 
-    $response->assertStatus(429)
-        ->assertJsonFragment(['code' => 'TOO_MANY_ATTEMPTS']);
-});
+        $response->assertStatus(200);
+        Notification::assertNothingSent();
+    }
 
-test('SchoolAdminCreated event triggers admin verification email', function () {
-    Notification::fake();
+    public function test_second_resend_within_1_minute_returns_429(): void
+    {
+        $guardian = Guardian::factory()->create(['email_verified_at' => null]);
 
-    $admin = SchoolAdmin::factory()->create(['email_verified_at' => null]);
+        $this->postJson('/api/v1/guardian/auth/resend-verification', [
+            'email' => $guardian->email,
+        ]);
 
-    event(new SchoolAdminCreated($admin));
+        $response = $this->postJson('/api/v1/guardian/auth/resend-verification', [
+            'email' => $guardian->email,
+        ]);
 
-    Notification::assertSentTo($admin, AdminEmailVerificationNotification::class);
-});
+        $response->assertStatus(429)
+            ->assertJsonFragment(['code' => 'TOO_MANY_ATTEMPTS']);
+    }
+
+    public function test_school_admin_created_event_triggers_admin_verification_email(): void
+    {
+        Notification::fake();
+
+        $admin = SchoolAdmin::factory()->create(['email_verified_at' => null]);
+
+        event(new SchoolAdminCreated($admin));
+
+        Notification::assertSentTo($admin, AdminEmailVerificationNotification::class);
+    }
+}

@@ -32,6 +32,12 @@ let AuthController = class AuthController {
     resetPassword(body) {
         return this.authService.resetPassword(body);
     }
+    verifyEmail(id, hash, query) {
+        return this.authService.verifyEmail(id, hash, query);
+    }
+    resendVerification(body) {
+        return this.authService.resendVerification(body);
+    }
 };
 exports.AuthController = AuthController;
 __decorate([
@@ -62,6 +68,22 @@ __decorate([
     __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", void 0)
 ], AuthController.prototype, "resetPassword", null);
+__decorate([
+    (0, common_1.Get)('verify-email/:id/:hash'),
+    __param(0, (0, common_1.Param)('id')),
+    __param(1, (0, common_1.Param)('hash')),
+    __param(2, (0, common_1.Query)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, String, Object]),
+    __metadata("design:returntype", void 0)
+], AuthController.prototype, "verifyEmail", null);
+__decorate([
+    (0, common_1.Post)('resend-verification'),
+    __param(0, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", void 0)
+], AuthController.prototype, "resendVerification", null);
 exports.AuthController = AuthController = __decorate([
     (0, common_1.Controller)('auth'),
     __metadata("design:paramtypes", [auth_service_1.AuthService])

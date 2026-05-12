@@ -75,6 +75,12 @@ class AdminAuthController extends Controller
 
     public function verifyEmail(Request $request, string $id, string $hash): JsonResponse
     {
+        if (! $request->hasValidSignature()) {
+            return response()->json([
+                'errors' => [['code' => 'LINK_EXPIRED', 'message' => 'Verification link has expired.']],
+            ], 400);
+        }
+
         $admin = Auth::guard('admin')->getProvider()->retrieveById($id);
 
         if (! $admin) {
@@ -83,21 +89,15 @@ class AdminAuthController extends Controller
             ], 404);
         }
 
-        if ($admin->hasVerifiedEmail()) {
-            return response()->json([
-                'errors' => [['code' => 'EMAIL_ALREADY_VERIFIED', 'message' => 'Email already verified.']],
-            ], 400);
-        }
-
         if (! hash_equals($hash, sha1($admin->getEmailForVerification()))) {
             return response()->json([
                 'errors' => [['code' => 'INVALID_LINK', 'message' => 'Invalid verification link.']],
             ], 400);
         }
 
-        if (! $request->hasValidSignature()) {
+        if ($admin->hasVerifiedEmail()) {
             return response()->json([
-                'errors' => [['code' => 'LINK_EXPIRED', 'message' => 'Verification link has expired.']],
+                'errors' => [['code' => 'EMAIL_ALREADY_VERIFIED', 'message' => 'Email already verified.']],
             ], 400);
         }
 
@@ -108,22 +108,23 @@ class AdminAuthController extends Controller
 
     public function resendVerification(Request $request): JsonResponse
     {
-        $admin = $request->user('admin');
+        $request->validate(['email' => 'required|email|max:255']);
 
-        if ($admin->hasVerifiedEmail()) {
-            return response()->json([
-                'errors' => [['code' => 'EMAIL_ALREADY_VERIFIED', 'message' => 'Email already verified.']],
-            ], 400);
-        }
-
-        if (RateLimiter::tooManyAttempts('resend.admin:user:'.$admin->id, 1)) {
+        if (RateLimiter::tooManyAttempts('resend.admin:email:'.$request->email, 1)) {
             return response()->json([
                 'errors' => [['code' => 'TOO_MANY_ATTEMPTS', 'message' => 'Please wait before requesting another verification email.']],
             ], 429);
         }
 
-        RateLimiter::hit('resend.admin:user:'.$admin->id, 60);
-        $admin->notify(new AdminEmailVerificationNotification());
+        RateLimiter::hit('resend.admin:email:'.$request->email, 60);
+
+        $admin = Auth::guard('admin')->getProvider()->retrieveByCredentials([
+            'email' => $request->email,
+        ]);
+
+        if ($admin && ! $admin->hasVerifiedEmail()) {
+            $admin->notify(new AdminEmailVerificationNotification());
+        }
 
         return response()->json(['data' => ['message' => 'Verification email sent.']]);
     }

@@ -1,58 +1,63 @@
 <?php
 
+namespace Tests\Unit\Modules\Auth;
+
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\RateLimiter;
+use Tests\TestCase;
 
-test('login guardian limiter uses email|ip key', function () {
-    $request = Request::create('/login', 'POST', ['email' => 'test@test.com']);
-    $request->server->set('REMOTE_ADDR', '127.0.0.1');
+class RateLimiterTest extends TestCase
+{
+    public function test_login_guardian_limiter_uses_email_ip_key(): void
+    {
+        $request = Request::create('/login', 'POST', ['email' => 'test@test.com']);
+        $request->server->set('REMOTE_ADDR', '127.0.0.1');
 
-    $limit = RateLimiter::limiter('login.guardian')($request);
+        $limit = RateLimiter::limiter('login.guardian')($request);
 
-    expect($limit)->toBeInstanceOf(Limit::class);
+        $this->assertInstanceOf(Limit::class, $limit);
 
-    $key = (fn () => $this->key)->bindTo($limit, $limit)();
-    expect($key)->toBe('test@test.com|127.0.0.1');
-});
+        $key = (fn () => $this->key)->bindTo($limit, $limit)();
+        $this->assertSame('test@test.com|127.0.0.1', $key);
+    }
 
-test('login guardian limiter allows 5 attempts per 15 minutes', function () {
-    $request = Request::create('/login', 'POST', ['email' => 'test@test.com']);
-    $request->server->set('REMOTE_ADDR', '127.0.0.1');
+    public function test_login_guardian_limiter_allows_5_attempts_per_15_minutes(): void
+    {
+        $request = Request::create('/login', 'POST', ['email' => 'test@test.com']);
+        $request->server->set('REMOTE_ADDR', '127.0.0.1');
 
-    $limit = RateLimiter::limiter('login.guardian')($request);
+        $limit = RateLimiter::limiter('login.guardian')($request);
 
-    $maxAttempts = (fn () => $this->maxAttempts)->bindTo($limit, $limit)();
-    $decayMinutes = (fn () => $this->decayMinutes)->bindTo($limit, $limit)();
+        $maxAttempts = (fn () => $this->maxAttempts)->bindTo($limit, $limit)();
+        $decayMinutes = (fn () => $this->decayMinutes)->bindTo($limit, $limit)();
 
-    expect($maxAttempts)->toBe(5);
-    expect($decayMinutes)->toBe(15);
-});
+        $this->assertSame(5, $maxAttempts);
+        $this->assertSame(15, $decayMinutes);
+    }
 
-test('resend guardian limiter uses user id key', function () {
-    $guardian = new \App\Modules\Students\Models\Guardian();
-    $guardian->id = 'test-uuid-123';
+    public function test_resend_guardian_limiter_uses_email_key(): void
+    {
+        $request = Request::create('/resend', 'POST', ['email' => 'test@test.com']);
 
-    $request = Request::create('/resend', 'POST');
-    $request->setUserResolver(fn ($guard = null) => $guard === 'guardian' ? $guardian : null);
+        $limit = RateLimiter::limiter('resend.guardian')($request);
 
-    $limit = RateLimiter::limiter('resend.guardian')($request);
+        $this->assertInstanceOf(Limit::class, $limit);
 
-    expect($limit)->toBeInstanceOf(Limit::class);
-});
+        $key = (fn () => $this->key)->bindTo($limit, $limit)();
+        $this->assertSame('email:test@test.com', $key);
+    }
 
-test('resend guardian limiter allows 1 attempt per minute', function () {
-    $guardian = new \App\Modules\Students\Models\Guardian();
-    $guardian->id = 'test-uuid-123';
+    public function test_resend_guardian_limiter_allows_1_attempt_per_minute(): void
+    {
+        $request = Request::create('/resend', 'POST', ['email' => 'test@test.com']);
 
-    $request = Request::create('/resend', 'POST');
-    $request->setUserResolver(fn ($guard = null) => $guard === 'guardian' ? $guardian : null);
+        $limit = RateLimiter::limiter('resend.guardian')($request);
 
-    $limit = RateLimiter::limiter('resend.guardian')($request);
+        $maxAttempts = (fn () => $this->maxAttempts)->bindTo($limit, $limit)();
+        $decayMinutes = (fn () => $this->decayMinutes)->bindTo($limit, $limit)();
 
-    $maxAttempts = (fn () => $this->maxAttempts)->bindTo($limit, $limit)();
-    $decayMinutes = (fn () => $this->decayMinutes)->bindTo($limit, $limit)();
-
-    expect($maxAttempts)->toBe(1);
-    expect($decayMinutes)->toBe(1);
-});
+        $this->assertSame(1, $maxAttempts);
+        $this->assertSame(1, $decayMinutes);
+    }
+}

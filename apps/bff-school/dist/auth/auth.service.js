@@ -12,6 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.AuthService = void 0;
 const axios_1 = require("@nestjs/axios");
 const common_1 = require("@nestjs/common");
+const axios_2 = require("axios");
 const rxjs_1 = require("rxjs");
 const API_BASE = process.env.API_URL ?? 'http://api:8000';
 let AuthService = class AuthService {
@@ -19,20 +20,65 @@ let AuthService = class AuthService {
         this.http = http;
     }
     async login(body) {
-        const { data } = await (0, rxjs_1.firstValueFrom)(this.http.post(`${API_BASE}/api/v1/admin/auth/login`, body));
-        return data;
+        try {
+            const { data } = await (0, rxjs_1.firstValueFrom)(this.http.post(`${API_BASE}/api/v1/admin/auth/login`, body));
+            return data;
+        }
+        catch (err) {
+            this.rethrow(err);
+        }
     }
     async logout(token) {
-        const { data } = await (0, rxjs_1.firstValueFrom)(this.http.post(`${API_BASE}/api/v1/admin/auth/logout`, {}, { headers: { Authorization: `Bearer ${token}` } }));
-        return data;
+        try {
+            const { data } = await (0, rxjs_1.firstValueFrom)(this.http.post(`${API_BASE}/api/v1/admin/auth/logout`, {}, { headers: { Authorization: `Bearer ${token}` } }));
+            return data;
+        }
+        catch (err) {
+            this.rethrow(err);
+        }
     }
     async forgotPassword(body) {
-        const { data } = await (0, rxjs_1.firstValueFrom)(this.http.post(`${API_BASE}/api/v1/admin/auth/forgot-password`, body));
-        return data;
+        try {
+            const { data } = await (0, rxjs_1.firstValueFrom)(this.http.post(`${API_BASE}/api/v1/admin/auth/forgot-password`, body));
+            return data;
+        }
+        catch (err) {
+            this.rethrow(err);
+        }
     }
     async resetPassword(body) {
-        const { data } = await (0, rxjs_1.firstValueFrom)(this.http.post(`${API_BASE}/api/v1/admin/auth/reset-password`, body));
-        return data;
+        try {
+            const { data } = await (0, rxjs_1.firstValueFrom)(this.http.post(`${API_BASE}/api/v1/admin/auth/reset-password`, body));
+            return data;
+        }
+        catch (err) {
+            this.rethrow(err);
+        }
+    }
+    async verifyEmail(id, hash, query) {
+        const params = new URLSearchParams(query).toString();
+        try {
+            const { data } = await (0, rxjs_1.firstValueFrom)(this.http.get(`${API_BASE}/api/v1/admin/auth/verify-email/${id}/${hash}?${params}`));
+            return data;
+        }
+        catch (err) {
+            this.rethrow(err);
+        }
+    }
+    async resendVerification(body) {
+        try {
+            const { data } = await (0, rxjs_1.firstValueFrom)(this.http.post(`${API_BASE}/api/v1/admin/auth/resend-verification`, body));
+            return data;
+        }
+        catch (err) {
+            this.rethrow(err);
+        }
+    }
+    rethrow(err) {
+        if (err instanceof axios_2.AxiosError && err.response) {
+            throw new common_1.HttpException(err.response.data, err.response.status);
+        }
+        throw err;
     }
 };
 exports.AuthService = AuthService;

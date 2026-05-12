@@ -13,7 +13,6 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\RateLimiter;
-use Illuminate\Support\Facades\URL;
 
 class GuardianAuthController extends Controller
 {
@@ -76,6 +75,12 @@ class GuardianAuthController extends Controller
 
     public function verifyEmail(Request $request, string $id, string $hash): JsonResponse
     {
+        if (! $request->hasValidSignature()) {
+            return response()->json([
+                'errors' => [['code' => 'LINK_EXPIRED', 'message' => 'Verification link has expired.']],
+            ], 400);
+        }
+
         $guardian = Auth::guard('guardian')->getProvider()->retrieveById($id);
 
         if (! $guardian) {
@@ -84,21 +89,15 @@ class GuardianAuthController extends Controller
             ], 404);
         }
 
-        if ($guardian->hasVerifiedEmail()) {
-            return response()->json([
-                'errors' => [['code' => 'EMAIL_ALREADY_VERIFIED', 'message' => 'Email already verified.']],
-            ], 400);
-        }
-
         if (! hash_equals($hash, sha1($guardian->getEmailForVerification()))) {
             return response()->json([
                 'errors' => [['code' => 'INVALID_LINK', 'message' => 'Invalid verification link.']],
             ], 400);
         }
 
-        if (! $request->hasValidSignature()) {
+        if ($guardian->hasVerifiedEmail()) {
             return response()->json([
-                'errors' => [['code' => 'LINK_EXPIRED', 'message' => 'Verification link has expired.']],
+                'errors' => [['code' => 'EMAIL_ALREADY_VERIFIED', 'message' => 'Email already verified.']],
             ], 400);
         }
 
@@ -109,22 +108,23 @@ class GuardianAuthController extends Controller
 
     public function resendVerification(Request $request): JsonResponse
     {
-        $guardian = $request->user('guardian');
+        $request->validate(['email' => 'required|email|max:255']);
 
-        if ($guardian->hasVerifiedEmail()) {
-            return response()->json([
-                'errors' => [['code' => 'EMAIL_ALREADY_VERIFIED', 'message' => 'Email already verified.']],
-            ], 400);
-        }
-
-        if (RateLimiter::tooManyAttempts('resend.guardian:user:'.$guardian->id, 1)) {
+        if (RateLimiter::tooManyAttempts('resend.guardian:email:'.$request->email, 1)) {
             return response()->json([
                 'errors' => [['code' => 'TOO_MANY_ATTEMPTS', 'message' => 'Please wait before requesting another verification email.']],
             ], 429);
         }
 
-        RateLimiter::hit('resend.guardian:user:'.$guardian->id, 60);
-        $guardian->notify(new GuardianEmailVerificationNotification());
+        RateLimiter::hit('resend.guardian:email:'.$request->email, 60);
+
+        $guardian = Auth::guard('guardian')->getProvider()->retrieveByCredentials([
+            'email' => $request->email,
+        ]);
+
+        if ($guardian && ! $guardian->hasVerifiedEmail()) {
+            $guardian->notify(new GuardianEmailVerificationNotification());
+        }
 
         return response()->json(['data' => ['message' => 'Verification email sent.']]);
     }

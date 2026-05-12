@@ -16,4 +16,8 @@ export declare class AuthController {
         password: string;
         password_confirmation: string;
     }): Promise<any>;
+    verifyEmail(id: string, hash: string, query: Record<string, string>): Promise<any>;
+    resendVerification(body: {
+        email: string;
+    }): Promise<any>;
 }
