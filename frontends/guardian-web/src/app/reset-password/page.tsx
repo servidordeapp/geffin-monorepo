@@ -32,6 +32,7 @@ function ResetForm() {
       return;
     }
 
+    setLoading(false);
     router.push('/login');
   }
 

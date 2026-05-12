@@ -71,8 +71,8 @@ export default function LoginPage() {
         </div>
         {error === 'EMAIL_NOT_VERIFIED' && (
           <p role="alert">
-            Please verify your email first.{' '}
-            <a href="/resend-verification">Resend verification email</a>
+            Please verify your email.{' '}
+            <a href="/resend-verification">Request a new verification email</a>
           </p>
         )}
         {error && error !== 'EMAIL_NOT_VERIFIED' && (

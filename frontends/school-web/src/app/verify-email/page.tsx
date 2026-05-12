@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 export default function VerifyEmailPage() {
   const [status, setStatus] = useState<'loading' | 'success' | 'error'>('loading');
   const [message, setMessage] = useState('');
+  const [errorCode, setErrorCode] = useState<string | null>(null);
 
   useEffect(() => {
     const url = new URL(window.location.href);
@@ -19,6 +20,7 @@ export default function VerifyEmailPage() {
           setMessage('Email verified! You can now log in.');
         } else {
           setStatus('error');
+          setErrorCode(json.errors?.[0]?.code ?? null);
           setMessage(json.errors?.[0]?.message ?? 'Verification failed.');
         }
       })
@@ -33,7 +35,17 @@ export default function VerifyEmailPage() {
   return (
     <main>
       <p role="alert">{message}</p>
-      {status === 'success' ? <a href="/login">Go to login</a> : <a href="/login">Back to login</a>}
+      {status === 'success' && <a href="/login">Go to login</a>}
+      {status === 'error' && (
+        <>
+          <a href="/login">Back to login</a>
+          {errorCode === 'LINK_EXPIRED' && (
+            <p>
+              <a href="/resend-verification">Request a new verification email</a>
+            </p>
+          )}
+        </>
+      )}
     </main>
   );
 }
