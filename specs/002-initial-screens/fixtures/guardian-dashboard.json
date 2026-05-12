@@ -1,0 +1,76 @@
+{
+  "data": {
+    "guardian": { "firstName": "Maria", "unreadNotifications": 2 },
+    "children": [
+      {
+        "id": "c_01ABC",
+        "name": "Pedro Silva",
+        "grade": "3º Ano A",
+        "school": "Escola Municipal João Pessoa",
+        "avatarUrl": null,
+        "balance": 5000
+      },
+      {
+        "id": "c_02DEF",
+        "name": "Ana Silva",
+        "grade": "1º Ano B",
+        "school": "Escola Municipal João Pessoa",
+        "avatarUrl": null,
+        "balance": -500
+      }
+    ],
+    "payments": [
+      {
+        "id": "p_01GHI",
+        "childId": "c_01ABC",
+        "description": "Mensalidade Maio",
+        "amountCents": 85000,
+        "dueDate": "2026-05-20",
+        "status": "dueSoon"
+      },
+      {
+        "id": "p_02JKL",
+        "childId": "c_02DEF",
+        "description": "Mensalidade Maio",
+        "amountCents": 85000,
+        "dueDate": "2026-05-10",
+        "status": "overdue"
+      },
+      {
+        "id": "p_03MNO",
+        "childId": "c_01ABC",
+        "description": "Material escolar",
+        "amountCents": 12000,
+        "dueDate": "2026-05-31",
+        "status": "onTime"
+      }
+    ],
+    "recentActivity": [
+      {
+        "id": "a_01PQR",
+        "childId": "c_01ABC",
+        "description": "Cantina — Almoço",
+        "amountCents": 1500,
+        "type": "debit",
+        "timestamp": "2026-05-12T12:30:00-03:00"
+      },
+      {
+        "id": "a_02STU",
+        "childId": "c_01ABC",
+        "description": "Recarga de carteira",
+        "amountCents": 10000,
+        "type": "credit",
+        "timestamp": "2026-05-11T09:15:00-03:00"
+      },
+      {
+        "id": "a_03VWX",
+        "childId": "c_02DEF",
+        "description": "Cantina — Lanche",
+        "amountCents": 800,
+        "type": "debit",
+        "timestamp": "2026-05-10T10:05:00-03:00"
+      }
+    ]
+  },
+  "meta": { "generatedAt": "2026-05-12T15:00:00-03:00" }
+}

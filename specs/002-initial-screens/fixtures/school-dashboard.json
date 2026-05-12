@@ -1,0 +1,38 @@
+{
+  "data": {
+    "kpis": [
+      { "id": "revenue", "label": "Receita do mês", "value": 12500000, "unit": "brl", "changePct": 5.2, "changePositive": true },
+      { "id": "delinquency", "label": "Inadimplência", "value": 320, "unit": "percent", "changePct": -1.5, "changePositive": true },
+      { "id": "activeStudents", "label": "Alunos ativos", "value": 248, "unit": "count", "changePct": 2.1, "changePositive": true },
+      { "id": "canteenTickets", "label": "Tickets cantina", "value": 1834, "unit": "count", "changePct": 8.3, "changePositive": true }
+    ],
+    "revenueChart": [
+      { "monthLabel": "Dez", "revenueCents": 11800000 },
+      { "monthLabel": "Jan", "revenueCents": 12000000 },
+      { "monthLabel": "Fev", "revenueCents": 11500000 },
+      { "monthLabel": "Mar", "revenueCents": 12200000 },
+      { "monthLabel": "Abr", "revenueCents": 12100000 },
+      { "monthLabel": "Mai", "revenueCents": 12500000 }
+    ],
+    "chargeStatus": {
+      "paidCents": 9800000, "paidCount": 185,
+      "openCents": 1900000, "openCount": 43,
+      "overdueCents": 800000, "overdueCount": 20,
+      "totalCents": 12500000
+    },
+    "charges": {
+      "items": [
+        { "id": "ch_01", "studentName": "Pedro Silva", "planName": "Mensalidade", "dueDate": "2026-05-20", "amountCents": 85000, "status": "open" },
+        { "id": "ch_02", "studentName": "Ana Costa", "planName": "Mensalidade", "dueDate": "2026-05-10", "amountCents": 85000, "status": "overdue" },
+        { "id": "ch_03", "studentName": "Lucas Pereira", "planName": "Mensalidade", "dueDate": "2026-04-20", "amountCents": 85000, "status": "paid" }
+      ],
+      "total": 63, "page": 1, "pageSize": 10
+    },
+    "activity": [
+      { "id": "ev_01", "type": "payment", "description": "Pagamento recebido — Pedro Silva (Mensalidade)", "timestamp": "2026-05-12T15:00:00-03:00" },
+      { "id": "ev_02", "type": "enrollment", "description": "Novo aluno matriculado — Sofia Lima", "timestamp": "2026-05-12T11:30:00-03:00" },
+      { "id": "ev_03", "type": "contract", "description": "Contrato renovado — Turma 2º Ano A", "timestamp": "2026-05-11T14:00:00-03:00" }
+    ]
+  },
+  "meta": { "period": "2026-05", "schoolId": "sch_01STU" }
+}

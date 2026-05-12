@@ -1,0 +1,35 @@
+{
+  "guardian_login_success": {
+    "data": {
+      "token": "mock-guardian-token-abc123",
+      "guardianId": "g_01HXYZ",
+      "firstName": "Maria",
+      "email": "guardian@mock.local",
+      "requiresMfa": false
+    }
+  },
+  "guardian_login_mfa": {
+    "data": { "requiresMfa": true, "sessionToken": "mock-mfa-session-xyz" },
+    "errors": []
+  },
+  "guardian_login_invalid": {
+    "errors": [{ "code": "INVALID_CREDENTIALS", "message": "E-mail ou senha inválidos." }]
+  },
+  "school_login_success": {
+    "data": {
+      "token": "mock-school-token-def456",
+      "staffId": "s_01PQR",
+      "firstName": "Ana",
+      "email": "admin@mock.local",
+      "role": "admin",
+      "schools": [{ "id": "sch_01STU", "name": "Escola Municipal João Pessoa", "code": "ESCOLA01" }],
+      "activeSchoolId": "sch_01STU"
+    }
+  },
+  "school_login_invalid": {
+    "errors": [{ "code": "INVALID_CREDENTIALS", "message": "Credenciais inválidas." }]
+  },
+  "school_login_bad_code": {
+    "errors": [{ "code": "INVALID_INSTITUTION_CODE", "field": "institutionCode", "message": "Código inválido. Use 4–10 letras maiúsculas ou números." }]
+  }
+}
