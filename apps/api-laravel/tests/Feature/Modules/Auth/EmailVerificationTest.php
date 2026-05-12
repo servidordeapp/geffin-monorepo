@@ -9,6 +9,7 @@ use App\Modules\Auth\Notifications\GuardianEmailVerificationNotification;
 use App\Modules\Students\Events\GuardianCreated;
 use App\Modules\Students\Models\Guardian;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\URL;
 use Tests\TestCase;
@@ -16,6 +17,12 @@ use Tests\TestCase;
 class EmailVerificationTest extends TestCase
 {
     use RefreshDatabase;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+        Cache::flush();
+    }
 
     public function test_guardian_created_event_triggers_verification_email(): void
     {

@@ -30,10 +30,10 @@ class RateLimiterTest extends TestCase
         $limit = RateLimiter::limiter('login.guardian')($request);
 
         $maxAttempts = (fn () => $this->maxAttempts)->bindTo($limit, $limit)();
-        $decayMinutes = (fn () => $this->decayMinutes)->bindTo($limit, $limit)();
+        $decaySeconds = (fn () => $this->decaySeconds)->bindTo($limit, $limit)();
 
         $this->assertSame(5, $maxAttempts);
-        $this->assertSame(15, $decayMinutes);
+        $this->assertSame(15 * 60, $decaySeconds);
     }
 
     public function test_resend_guardian_limiter_uses_email_key(): void
@@ -55,9 +55,9 @@ class RateLimiterTest extends TestCase
         $limit = RateLimiter::limiter('resend.guardian')($request);
 
         $maxAttempts = (fn () => $this->maxAttempts)->bindTo($limit, $limit)();
-        $decayMinutes = (fn () => $this->decayMinutes)->bindTo($limit, $limit)();
+        $decaySeconds = (fn () => $this->decaySeconds)->bindTo($limit, $limit)();
 
         $this->assertSame(1, $maxAttempts);
-        $this->assertSame(1, $decayMinutes);
+        $this->assertSame(60, $decaySeconds);
     }
 }

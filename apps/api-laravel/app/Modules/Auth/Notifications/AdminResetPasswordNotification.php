@@ -11,9 +11,12 @@ class AdminResetPasswordNotification extends ResetPassword implements ShouldQueu
 {
     use Queueable;
 
-    public string $connection = 'database';
-
-    public string $queue = 'mails';
+    public function __construct(string $token)
+    {
+        parent::__construct($token);
+        $this->connection = 'database';
+        $this->queue = 'mails';
+    }
 
     protected function resetUrl($notifiable): string
     {

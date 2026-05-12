@@ -4,6 +4,7 @@ namespace Tests\Feature\Modules\Auth;
 
 use App\Modules\Administration\Models\SchoolAdmin;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\RateLimiter;
 use Tests\TestCase;
 
 class AdminLoginTest extends TestCase
@@ -17,6 +18,10 @@ class AdminLoginTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
+
+        RateLimiter::clear('login.admin:admin@test.com|127.0.0.1');
+        RateLimiter::clear('login.admin:unverified@test.com|127.0.0.1');
+        RateLimiter::clear('login.admin:inactive@test.com|127.0.0.1');
 
         $this->admin = SchoolAdmin::factory()->create([
             'email' => 'admin@test.com',

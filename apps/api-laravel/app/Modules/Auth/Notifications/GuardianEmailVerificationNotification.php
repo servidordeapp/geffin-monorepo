@@ -13,9 +13,11 @@ class GuardianEmailVerificationNotification extends VerifyEmail implements Shoul
 {
     use Queueable;
 
-    public string $connection = 'database';
-
-    public string $queue = 'mails';
+    public function __construct()
+    {
+        $this->connection = 'database';
+        $this->queue = 'mails';
+    }
 
     protected function verificationUrl($notifiable): string
     {

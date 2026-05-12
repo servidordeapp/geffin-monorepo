@@ -4,6 +4,7 @@ namespace Tests\Feature\Modules\Auth;
 
 use App\Modules\Students\Models\Guardian;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\RateLimiter;
 use Tests\TestCase;
 
 class GuardianLoginTest extends TestCase
@@ -17,6 +18,10 @@ class GuardianLoginTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
+
+        RateLimiter::clear('login.guardian:guardian@test.com|127.0.0.1');
+        RateLimiter::clear('login.guardian:unverified@test.com|127.0.0.1');
+        RateLimiter::clear('login.guardian:inactive@test.com|127.0.0.1');
 
         $this->guardian = Guardian::factory()->create([
             'email' => 'guardian@test.com',
