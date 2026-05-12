@@ -65,6 +65,17 @@ A sibling file, `GEMINI.md`, contains the foundational mandate for AI agents in 
 
 - `.specify/memory/constitution.md` — project constitution. Five non-negotiable principles: Code Quality, Testing Standards (TDD), UX Consistency, Performance, Simplicity (YAGNI). Any plan must verify against this before execution.
 
+## API Laravel — Skills (mandatory)
+
+Before any work in `apps/api-laravel/`, activate the relevant skill from `apps/api-laravel/.claude/skills/`:
+
+| Skill | Trigger |
+|---|---|
+| `laravel-best-practices` | Any Laravel PHP code — controllers, models, migrations, services, queries, routes, queues, events, security, testing, architecture |
+| `deploying-laravel-cloud` | Deploy, environment management, provisioning, billing, or any Laravel Cloud operation |
+
+Read the skill's rule files via a sub-agent before making changes. Do not skip this step.
+
 ## API Laravel — Module Structure
 
 The API Core is a **modular monolith**. Each domain lives in its own module under `app/Modules/` and is treated as an isolated bounded context.

@@ -1,0 +1,16 @@
+{
+  "expo": {
+    "name": "GFN Guardian",
+    "slug": "guardian-mobile",
+    "version": "0.1.0",
+    "orientation": "portrait",
+    "scheme": "guardian",
+    "platforms": ["ios", "android"],
+    "android": {
+      "package": "com.gfn.guardian"
+    },
+    "ios": {
+      "bundleIdentifier": "com.gfn.guardian"
+    }
+  }
+}

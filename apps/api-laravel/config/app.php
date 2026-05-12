@@ -118,6 +118,9 @@ return [
     |
     */
 
+    'admin_frontend_url' => env('ADMIN_FRONTEND_URL', 'http://localhost:3003'),
+    'guardian_frontend_url' => env('GUARDIAN_FRONTEND_URL', 'http://localhost:3000'),
+
     'maintenance' => [
         'driver' => env('APP_MAINTENANCE_DRIVER', 'file'),
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
