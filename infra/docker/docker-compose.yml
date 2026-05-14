@@ -156,6 +156,94 @@ services:
     networks:
       - gfn
 
+  # ─── BFF: School ────────────────────────────────────────────────────────────
+  bff-school:
+    build:
+      context: ../../apps/bff-school
+      dockerfile: Dockerfile
+    container_name: gfn_bff_school
+    restart: unless-stopped
+    working_dir: /app
+    volumes:
+      - ../../apps/bff-school:/app
+      - /app/node_modules
+    environment:
+      PORT: 3002
+      API_URL: http://nginx:80
+    ports:
+      - "3002:3002"
+    depends_on:
+      - nginx
+    networks:
+      - gfn
+
+  # ─── BFF: Guardian ──────────────────────────────────────────────────────────
+  bff-guardian:
+    build:
+      context: ../../apps/bff-guardian
+      dockerfile: Dockerfile
+    container_name: gfn_bff_guardian
+    restart: unless-stopped
+    working_dir: /app
+    volumes:
+      - ../../apps/bff-guardian:/app
+      - /app/node_modules
+    environment:
+      PORT: 3001
+      API_URL: http://nginx:80
+    ports:
+      - "3001:3001"
+    depends_on:
+      - nginx
+    networks:
+      - gfn
+
+  # ─── Frontend: School Web ────────────────────────────────────────────────────
+  school-web:
+    build:
+      context: ../../
+      dockerfile: frontends/school-web/Dockerfile
+    container_name: gfn_school_web
+    restart: unless-stopped
+    working_dir: /app/frontends/school-web
+    volumes:
+      - ../../frontends/school-web:/app/frontends/school-web
+      - ../../shared/design-system:/app/shared/design-system
+      - /app/node_modules
+      - /app/frontends/school-web/node_modules
+      - /app/frontends/school-web/.next
+    environment:
+      BFF_URL: http://bff-school:3002
+    ports:
+      - "3003:3003"
+    depends_on:
+      - bff-school
+    networks:
+      - gfn
+
+  # ─── Frontend: Guardian Web ──────────────────────────────────────────────────
+  guardian-web:
+    build:
+      context: ../../
+      dockerfile: frontends/guardian-web/Dockerfile
+    container_name: gfn_guardian_web
+    restart: unless-stopped
+    working_dir: /app/frontends/guardian-web
+    volumes:
+      - ../../frontends/guardian-web:/app/frontends/guardian-web
+      - ../../shared/design-system:/app/shared/design-system
+      - /app/node_modules
+      - /app/frontends/guardian-web/node_modules
+      - /app/frontends/guardian-web/.next
+    environment:
+      BFF_URL: http://bff-guardian:3001
+    ports:
+      - "3000:3000"
+    depends_on:
+      - bff-guardian
+    networks:
+      - gfn
+
   # ─── Workers (profile: worker) ───────────────────────────────────────────────
   queue:
     build:

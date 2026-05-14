@@ -161,6 +161,10 @@ curl http://localhost:8000/up
 | MinIO | `localhost:9001` | `gfn` / `secret123` |
 | Mailpit | `localhost:8025` | no auth |
 
+## Documentation
+
+- [Handoff de desenvolvimento — Telas Iniciais](./docs/design/01-handoff-dev.md) — tokens, contratos de componente e specs de tela (Login + Dashboard × 3 apps)
+
 ## Development Workflow
 
 Features follow the **SpecKit** workflow: `Specify → Plan → Tasks → Implement`. Each feature lives in a `specs/<id>-<slug>/` directory on a dedicated branch. Implementation is TDD-mandatory — write the failing test first, then the smallest change to make it pass.

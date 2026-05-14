@@ -1,0 +1,33 @@
+<?php
+
+namespace App\Modules\Auth\Notifications;
+
+use Illuminate\Auth\Notifications\VerifyEmail;
+use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\URL;
+
+class GuardianEmailVerificationNotification extends VerifyEmail implements ShouldQueue
+{
+    use Queueable;
+
+    public function __construct()
+    {
+        $this->connection = 'database';
+        $this->queue = 'mails';
+    }
+
+    protected function verificationUrl($notifiable): string
+    {
+        return URL::temporarySignedRoute(
+            'guardian.verification.verify',
+            Carbon::now()->addHours(Config::get('auth.verification.expire', 144)),
+            [
+                'id' => $notifiable->getKey(),
+                'hash' => sha1($notifiable->getEmailForVerification()),
+            ]
+        );
+    }
+}

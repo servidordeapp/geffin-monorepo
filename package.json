@@ -1,0 +1,9 @@
+{
+  "name": "geffin-monorepo",
+  "private": true,
+  "workspaces": [
+    "shared/design-system",
+    "frontends/guardian-web",
+    "frontends/school-web"
+  ]
+}

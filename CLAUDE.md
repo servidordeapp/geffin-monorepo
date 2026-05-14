@@ -64,6 +64,50 @@ A sibling file, `GEMINI.md`, contains the foundational mandate for AI agents in 
 ## Authoritative Documents (read before non-trivial work)
 
 - `.specify/memory/constitution.md` — project constitution. Five non-negotiable principles: Code Quality, Testing Standards (TDD), UX Consistency, Performance, Simplicity (YAGNI). Any plan must verify against this before execution.
+- `docs/design/01-handoff-dev.md` — design handoff for the initial screens (Login + Dashboard × 3 apps). Contains design tokens, component contracts, per-screen layout specs, a11y checklist, and animation rules. Read before any frontend work in `frontends/` or `shared/design-system/`.
+
+## Frontend Skills (mandatory)
+
+### Web Frontends (school-web, guardian-web)
+
+Before any work in `frontends/school-web/` or `frontends/guardian-web/`, activate the relevant skill from `.claude/skills/` (root):
+
+| Skill | Trigger |
+|---|---|
+| `next-best-practices` | Any Next.js code — file structure, RSC, routing, async params, metadata, error handling, image/font optimization |
+| `next-cache-components` | Caching — `use cache`, PPR, `cacheLife`, `cacheTag`, `revalidateTag` |
+| `vercel-react-best-practices` | React components, data fetching, bundle size, re-renders, waterfalls |
+| `vercel-composition-patterns` | Component architecture — compound components, render props, context, React 19 APIs |
+| `tailwind-design-system` | Tailwind v4, design tokens, `@gfn/design-system` components, variants, dark mode |
+| `javascript-testing-patterns` | All tests — Jest/Vitest/Testing Library (TDD mandatory per constitution) |
+
+### Mobile Frontend (guardian-mobile)
+
+Before any work in `frontends/guardian-mobile/`, activate the relevant skill from `frontends/guardian-mobile/.claude/skills/`:
+
+| Skill | Trigger |
+|---|---|
+| `vercel-react-native-skills` | React Native components, Expo, performance, native modules, platform APIs |
+| `building-native-ui` | Expo Router, lists, modals, tabs, bottom sheets, animations, navigation |
+| `native-data-fetching` | API calls, React Query, auth tokens (`expo-secure-store`), offline support |
+| `expo-tailwind-setup` | NativeWind v5, Tailwind v4 in Expo, CSS component wrappers, platform-specific styles |
+
+### Monorepo Build
+
+| Skill | Trigger |
+|---|---|
+| `turborepo` | `turbo.json`, task pipelines, caching, `--filter`, `--affected`, remote cache, CI optimization |
+
+## API Laravel — Skills (mandatory)
+
+Before any work in `apps/api-laravel/`, activate the relevant skill from `apps/api-laravel/.claude/skills/`:
+
+| Skill | Trigger |
+|---|---|
+| `laravel-best-practices` | Any Laravel PHP code — controllers, models, migrations, services, queries, routes, queues, events, security, testing, architecture |
+| `deploying-laravel-cloud` | Deploy, environment management, provisioning, billing, or any Laravel Cloud operation |
+
+Read the skill's rule files via a sub-agent before making changes. Do not skip this step.
 
 ## API Laravel — Module Structure
 
@@ -210,4 +254,5 @@ To work on an existing feature without checking out the branch, set `SPECIFY_FEA
 <!-- SPECKIT START -->
 For additional context about technologies to be used, project structure,
 shell commands, and other important information, read the current plan
+at `specs/001-epic-auth/plan.md`.
 <!-- SPECKIT END -->

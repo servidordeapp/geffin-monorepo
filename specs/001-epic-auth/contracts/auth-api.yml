@@ -1,0 +1,432 @@
+openapi: 3.1.0
+info:
+  title: GFN Auth API
+  version: 1.0.0
+  description: |
+    Authentication endpoints for GFN. All endpoints are accessed by clients
+    via BFF (bff-guardian or bff-school), which proxy requests to the API Core.
+
+    Two separate auth contexts:
+    - /api/v1/guardian/auth — for Guardians (via bff-guardian)
+    - /api/v1/admin/auth    — for School Admins (via bff-school)
+
+servers:
+  - url: http://localhost:8000/api/v1
+    description: Local API Core (direct — use BFF in production)
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+
+  schemas:
+    AuthResponse:
+      type: object
+      required: [data]
+      properties:
+        data:
+          type: object
+          required: [token, user]
+          properties:
+            token:
+              type: string
+              example: "1|abc123..."
+            user:
+              type: object
+              required: [id, name, email, email_verified]
+              properties:
+                id:
+                  type: string
+                  format: uuid
+                name:
+                  type: string
+                email:
+                  type: string
+                  format: email
+                email_verified:
+                  type: boolean
+
+    MessageResponse:
+      type: object
+      required: [data]
+      properties:
+        data:
+          type: object
+          required: [message]
+          properties:
+            message:
+              type: string
+
+    ErrorResponse:
+      type: object
+      required: [errors]
+      properties:
+        errors:
+          type: array
+          items:
+            type: object
+            required: [code, message]
+            properties:
+              code:
+                type: string
+              message:
+                type: string
+              field:
+                type: string
+
+    LoginRequest:
+      type: object
+      required: [email, password]
+      properties:
+        email:
+          type: string
+          format: email
+          maxLength: 255
+        password:
+          type: string
+          minLength: 1
+
+    ForgotPasswordRequest:
+      type: object
+      required: [email]
+      properties:
+        email:
+          type: string
+          format: email
+
+    ResetPasswordRequest:
+      type: object
+      required: [token, email, password, password_confirmation]
+      properties:
+        token:
+          type: string
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+          minLength: 8
+        password_confirmation:
+          type: string
+
+paths:
+  # ─────────────────────────────────────────────────────────────
+  # GUARDIAN AUTH
+  # ─────────────────────────────────────────────────────────────
+
+  /guardian/auth/login:
+    post:
+      operationId: guardianLogin
+      summary: Guardian login
+      tags: [Guardian Auth]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        '200':
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+        '401':
+          description: Invalid credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                errors:
+                  - code: INVALID_CREDENTIALS
+                    message: As credenciais fornecidas estão incorretas.
+        '403':
+          description: Email not verified
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                errors:
+                  - code: EMAIL_NOT_VERIFIED
+                    message: Confirme seu e-mail antes de acessar o sistema.
+        '403x':
+          description: Account inactive
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                errors:
+                  - code: ACCOUNT_INACTIVE
+                    message: Sua conta está inativa. Entre em contato com o suporte.
+        '429':
+          description: Too many attempts — temporary lockout
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                errors:
+                  - code: TOO_MANY_ATTEMPTS
+                    message: Muitas tentativas de login. Tente novamente em 15 minutos.
+
+  /guardian/auth/logout:
+    post:
+      operationId: guardianLogout
+      summary: Guardian logout
+      tags: [Guardian Auth]
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Logout successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageResponse'
+              example:
+                data:
+                  message: Sessão encerrada com sucesso.
+        '401':
+          description: Unauthenticated
+
+  /guardian/auth/forgot-password:
+    post:
+      operationId: guardianForgotPassword
+      summary: Request password reset link
+      tags: [Guardian Auth]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ForgotPasswordRequest'
+      responses:
+        '200':
+          description: Generic success (regardless of whether email exists — FR-007)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageResponse'
+              example:
+                data:
+                  message: Se este e-mail estiver cadastrado, você receberá as instruções em breve.
+
+  /guardian/auth/reset-password:
+    post:
+      operationId: guardianResetPassword
+      summary: Reset password using token
+      tags: [Guardian Auth]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ResetPasswordRequest'
+      responses:
+        '200':
+          description: Password reset successful — all sessions revoked
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageResponse'
+        '422':
+          description: Invalid or expired token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                errors:
+                  - code: INVALID_RESET_TOKEN
+                    message: O link de redefinição é inválido ou expirou.
+
+  /guardian/auth/verify-email/{id}/{hash}:
+    get:
+      operationId: guardianVerifyEmail
+      summary: Confirm email via signed link
+      tags: [Guardian Auth]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: hash
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: expires
+          in: query
+          required: true
+          schema:
+            type: integer
+        - name: signature
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Email verified successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageResponse'
+        '400':
+          description: Link expired or already used
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                errors:
+                  - code: EMAIL_ALREADY_VERIFIED
+                    message: Este e-mail já foi verificado.
+                  - code: LINK_EXPIRED
+                    message: O link de verificação expirou. Solicite um novo.
+
+  /guardian/auth/resend-verification:
+    post:
+      operationId: guardianResendVerification
+      summary: Resend email verification link
+      tags: [Guardian Auth]
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Verification email sent
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageResponse'
+        '400':
+          description: Email already verified
+        '429':
+          description: Rate limit — max 1 resend per minute
+
+  # ─────────────────────────────────────────────────────────────
+  # ADMIN AUTH (identical structure, different guard)
+  # ─────────────────────────────────────────────────────────────
+
+  /admin/auth/login:
+    post:
+      operationId: adminLogin
+      summary: School Admin login
+      tags: [Admin Auth]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        '200':
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+        '401':
+          description: Invalid credentials
+        '403':
+          description: Email not verified or account inactive
+        '429':
+          description: Too many attempts
+
+  /admin/auth/logout:
+    post:
+      operationId: adminLogout
+      summary: School Admin logout
+      tags: [Admin Auth]
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Logout successful
+
+  /admin/auth/forgot-password:
+    post:
+      operationId: adminForgotPassword
+      summary: Request password reset link
+      tags: [Admin Auth]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ForgotPasswordRequest'
+      responses:
+        '200':
+          description: Generic success response
+
+  /admin/auth/reset-password:
+    post:
+      operationId: adminResetPassword
+      summary: Reset password using token
+      tags: [Admin Auth]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ResetPasswordRequest'
+      responses:
+        '200':
+          description: Password reset successful
+        '422':
+          description: Invalid or expired token
+
+  /admin/auth/verify-email/{id}/{hash}:
+    get:
+      operationId: adminVerifyEmail
+      summary: Confirm email via signed link
+      tags: [Admin Auth]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: hash
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: expires
+          in: query
+          required: true
+          schema:
+            type: integer
+        - name: signature
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Email verified successfully
+        '400':
+          description: Link expired or already used
+
+  /admin/auth/resend-verification:
+    post:
+      operationId: adminResendVerification
+      summary: Resend email verification link
+      tags: [Admin Auth]
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Verification email sent
+        '400':
+          description: Email already verified
+        '429':
+          description: Rate limit — max 1 resend per minute
