@@ -2,6 +2,7 @@ import { forwardRef } from 'react'
 import { cva, type VariantProps } from 'class-variance-authority'
 import { Loader2 } from 'lucide-react'
 import { cn } from '../../lib/utils'
+import { useAppearance } from '../../context/AppearanceContext'
 
 const buttonVariants = cva(
   [
@@ -35,10 +36,6 @@ const buttonVariants = cva(
         md: 'h-10 px-4 text-sm gap-2',
         lg: 'h-12 px-6 text-base gap-2',
       },
-      /**
-       * guardian: rounded-lg (12px) — warmer, for responsável product
-       * admin:    rounded-md  (8px)  — sober, for escola admin product
-       */
       context: {
         guardian: 'rounded-lg',
         admin: 'rounded-md',
@@ -66,7 +63,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     {
       variant,
       size,
-      context,
+      context: contextProp,
       loading = false,
       leftIcon,
       rightIcon,
@@ -77,26 +74,38 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       ...props
     },
     ref
-  ) => (
-    <button
-      ref={ref}
-      className={cn(
-        buttonVariants({ variant, size, context }),
-        fullWidth && 'w-full',
-        className
-      )}
-      disabled={disabled || loading}
-      {...props}
-    >
-      {loading ? (
-        <Loader2 className="size-4 animate-spin" aria-hidden="true" />
-      ) : (
-        leftIcon && <span aria-hidden="true">{leftIcon}</span>
-      )}
-      {children}
-      {!loading && rightIcon && <span aria-hidden="true">{rightIcon}</span>}
-    </button>
-  )
+  ) => {
+    let resolvedContext = contextProp
+    if (resolvedContext === undefined || resolvedContext === null) {
+      try {
+        // eslint-disable-next-line react-hooks/rules-of-hooks
+        resolvedContext = useAppearance().context
+      } catch {
+        resolvedContext = 'guardian'
+      }
+    }
+
+    return (
+      <button
+        ref={ref}
+        className={cn(
+          buttonVariants({ variant, size, context: resolvedContext }),
+          fullWidth && 'w-full',
+          className
+        )}
+        disabled={disabled || loading}
+        {...props}
+      >
+        {loading ? (
+          <Loader2 className="size-4 animate-spin" aria-hidden="true" />
+        ) : (
+          leftIcon && <span aria-hidden="true">{leftIcon}</span>
+        )}
+        {children}
+        {!loading && rightIcon && <span aria-hidden="true">{rightIcon}</span>}
+      </button>
+    )
+  }
 )
 
 Button.displayName = 'Button'

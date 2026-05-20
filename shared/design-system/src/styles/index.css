@@ -82,3 +82,18 @@
   font-weight: 600;
   font-variant-numeric: tabular-nums;
 }
+
+/* ── Reduced motion ── */
+@media (prefers-reduced-motion: reduce) {
+  .animate-pulse {
+    animation: none;
+  }
+
+  .transition-all,
+  .transition-colors,
+  .transition-shadow,
+  .transition-transform,
+  [class*="transition-"] {
+    transition-duration: 0.01ms !important;
+  }
+}

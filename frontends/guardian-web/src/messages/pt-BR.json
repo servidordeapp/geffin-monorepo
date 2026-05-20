@@ -1,0 +1,40 @@
+{
+  "login": {
+    "title": "Bem-vindo ao GFN",
+    "subtitle": "Acesse o portal do responsável",
+    "emailLabel": "E-mail",
+    "passwordLabel": "Senha",
+    "rememberMe": "Lembrar de mim",
+    "forgotPassword": "Esqueci minha senha",
+    "signIn": "Entrar",
+    "signingIn": "Entrando...",
+    "orContinueWith": "ou continue com",
+    "googleSignIn": "Entrar com Google",
+    "appleSignIn": "Entrar com Apple",
+    "tagline": "Gestão financeira escolar simplificada."
+  },
+  "dashboard": {
+    "greeting": "Olá, {name}!",
+    "balance": "Saldo disponível",
+    "dueThisMonth": "A pagar este mês",
+    "recentActivity": "Atividade Recente",
+    "upcomingEvents": "Próximos Eventos",
+    "viewAll": "Ver tudo",
+    "viewCalendar": "Ver agenda",
+    "reload": "Recarregar",
+    "viewStatement": "Ver extrato",
+    "nav": {
+      "home": "Início",
+      "payments": "Pagamentos",
+      "canteen": "Cantina",
+      "shop": "Loja",
+      "history": "Histórico"
+    },
+    "paymentStatus": {
+      "paid": "Pago",
+      "dueSoon": "Próximo",
+      "overdue": "Atrasado",
+      "onTime": "Em dia"
+    }
+  }
+}

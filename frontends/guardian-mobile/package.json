@@ -9,11 +9,16 @@
     "test": "jest --watchAll"
   },
   "dependencies": {
+    "@tanstack/react-query": "^5.0.0",
     "expo": "~51.0.0",
+    "expo-image": "~1.12.0",
     "expo-router": "~3.5.0",
     "expo-secure-store": "~13.0.0",
+    "i18n-js": "^4.4.0",
     "react": "18.2.0",
-    "react-native": "0.74.0"
+    "react-native": "0.74.0",
+    "react-native-reanimated": "~3.10.0",
+    "react-native-toast-message": "^2.2.0"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

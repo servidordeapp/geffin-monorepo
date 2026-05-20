@@ -209,11 +209,12 @@ services:
     volumes:
       - ../../frontends/school-web:/app/frontends/school-web
       - ../../shared/design-system:/app/shared/design-system
+      - ../../specs:/app/specs
       - /app/node_modules
       - /app/frontends/school-web/node_modules
       - /app/frontends/school-web/.next
     environment:
-      BFF_URL: http://bff-school:3002
+      BFF_SCHOOL_URL: http://bff-school:3002
     ports:
       - "3003:3003"
     depends_on:
@@ -232,11 +233,12 @@ services:
     volumes:
       - ../../frontends/guardian-web:/app/frontends/guardian-web
       - ../../shared/design-system:/app/shared/design-system
+      - ../../specs:/app/specs
       - /app/node_modules
       - /app/frontends/guardian-web/node_modules
       - /app/frontends/guardian-web/.next
     environment:
-      BFF_URL: http://bff-guardian:3001
+      BFF_GUARDIAN_URL: http://bff-guardian:3001
     ports:
       - "3000:3000"
     depends_on:

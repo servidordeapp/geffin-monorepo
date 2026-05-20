@@ -43,7 +43,7 @@ export const Badge = forwardRef<HTMLSpanElement, BadgeProps>(
     >
       {dot && (
         <span
-          className={cn('size-2 rounded-full shrink-0', dotColors[variant])}
+          className={cn('size-2 rounded-full shrink-0', dotColors[variant || 'neutral'])}
           aria-hidden="true"
         />
       )}

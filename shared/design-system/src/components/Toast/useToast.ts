@@ -1,25 +1,19 @@
-import { useState, useCallback, useId } from 'react'
-import type { ToastProps } from './Toast'
+'use client'
 
-export interface ToastItem extends Omit<ToastProps, 'onDismiss'> {
-  id: string
-}
+import { toast as sonnerToast } from 'sonner'
 
 export function useToast() {
-  const [toasts, setToasts] = useState<ToastItem[]>([])
-
-  const dismiss = useCallback((id: string) => {
-    setToasts((prev) => prev.filter((t) => t.id !== id))
-  }, [])
-
-  const toast = useCallback(
-    (props: Omit<ToastItem, 'id'>) => {
-      const id = crypto.randomUUID()
-      setToasts((prev) => [...prev, { ...props, id }])
-      return id
+  return {
+    toast: {
+      success: (message: string, options?: { description?: string }) =>
+        sonnerToast.success(message, options),
+      error: (message: string, options?: { description?: string }) =>
+        sonnerToast.error(message, options),
+      warning: (message: string, options?: { description?: string }) =>
+        sonnerToast.warning(message, options),
+      info: (message: string, options?: { description?: string }) =>
+        sonnerToast.info(message, options),
+      dismiss: (id?: string | number) => sonnerToast.dismiss(id),
     },
-    []
-  )
-
-  return { toasts, toast, dismiss }
+  }
 }

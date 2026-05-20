@@ -1,0 +1,48 @@
+{
+  "login": {
+    "institutionCode": "Código da Instituição",
+    "institutionCodeHint": "Ex: ESCOLA01",
+    "email": "E-mail",
+    "password": "Senha",
+    "rememberMe": "Manter conectado",
+    "signIn": "Acessar Sistema",
+    "signingIn": "Acessando...",
+    "forgotPassword": "Esqueci minha senha",
+    "support": "Suporte",
+    "securityMessage": "Sua sessão é protegida e auditada",
+    "brand": "GFN | Administrativo",
+    "subtitle": "Gestão Financeira Escolar"
+  },
+  "dashboard": {
+    "pageTitle": "Dashboard",
+    "period": "Período",
+    "export": "Exportar",
+    "kpi": {
+      "revenue": "Receita do mês",
+      "delinquency": "Inadimplência",
+      "activeStudents": "Alunos ativos",
+      "canteenTickets": "Tickets cantina"
+    },
+    "charts": {
+      "revenue": "Receita Mensal",
+      "chargeStatus": "Status de Cobranças"
+    },
+    "table": {
+      "title": "Cobranças",
+      "student": "Aluno",
+      "plan": "Plano",
+      "dueDate": "Vencimento",
+      "amount": "Valor",
+      "status": "Status"
+    },
+    "activity": {
+      "title": "Atividade do Sistema",
+      "viewAll": "Ver log completo"
+    },
+    "chargeStatus": {
+      "paid": "Pago",
+      "open": "Em aberto",
+      "overdue": "Vencido"
+    }
+  }
+}

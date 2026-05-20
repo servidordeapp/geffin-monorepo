@@ -18,7 +18,7 @@
     "isolatedModules": true,
     "jsx": "preserve",
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"], "@fixtures/*": ["../../specs/002-initial-screens/fixtures/*"]
     },
     "plugins": [
       {

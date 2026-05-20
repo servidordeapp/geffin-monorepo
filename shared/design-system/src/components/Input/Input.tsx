@@ -1,9 +1,11 @@
+'use client'
+
 import { forwardRef, useId, useRef, useState } from 'react'
 import { Eye, EyeOff } from 'lucide-react'
 import { cn } from '../../lib/utils'
 
 export interface InputProps
-  extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'id' | 'placeholder'> {
+  extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'placeholder'> {
   label: string
   error?: string
   leftIcon?: React.ReactNode

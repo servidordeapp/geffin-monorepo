@@ -1,3 +1,5 @@
+'use client'
+
 import { useEffect, forwardRef } from 'react'
 import { cva, type VariantProps } from 'class-variance-authority'
 import { CheckCircle2, AlertTriangle, XCircle, Info, X } from 'lucide-react'
