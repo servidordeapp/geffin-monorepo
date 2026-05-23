@@ -33,57 +33,48 @@ new #[Layout('layouts.guest')] class extends Component {
 
 <div class="w-full">
     <form wire:submit="login" class="space-y-5">
-        <div>
-            <label for="email" class="block text-sm font-medium mb-1" style="color: var(--fg-2);">
-                E-mail
-            </label>
+        <label class="field w-full" for="email">
+            <span class="field-label">E-mail</span>
             <input
                 type="email"
                 id="email"
                 wire:model="email"
-                class="form-input w-full rounded-lg px-4 py-2.5 text-sm outline-none @error('email') form-input--error @enderror"
+                class="input w-full @error('email') error @enderror"
                 placeholder="seu@email.com"
                 autofocus
                 autocomplete="email"
             />
             @error('email')
-                <p class="mt-1 text-xs" style="color: var(--color-semantic-danger);">{{ $message }}</p>
+                <span class="t-caption" style="color: var(--color-semantic-danger);">{{ $message }}</span>
             @enderror
-        </div>
+        </label>
 
-        <div>
-            <label for="password" class="block text-sm font-medium mb-1" style="color: var(--fg-2);">
-                Senha
-            </label>
+        <label class="field w-full" for="password">
+            <span class="field-label">Senha</span>
             <input
                 type="password"
                 id="password"
                 wire:model="password"
-                class="form-input w-full rounded-lg px-4 py-2.5 text-sm outline-none @error('password') form-input--error @enderror"
+                class="input w-full @error('password') error @enderror"
                 placeholder="••••••••"
                 autocomplete="current-password"
             />
             @error('password')
-                <p class="mt-1 text-xs" style="color: var(--color-semantic-danger);">{{ $message }}</p>
+                <span class="t-caption" style="color: var(--color-semantic-danger);">{{ $message }}</span>
             @enderror
-        </div>
+        </label>
 
-        <div class="flex items-center">
-            <label class="flex items-center gap-2 text-sm cursor-pointer" style="color: var(--fg-2);">
-                <input
-                    type="checkbox"
-                    wire:model="remember"
-                    class="rounded"
-                    style="accent-color: var(--color-brand-primary-700);"
-                />
-                Lembrar-me
-            </label>
-        </div>
+        <label class="flex items-center gap-2 t-body-sm cursor-pointer">
+            <input
+                type="checkbox"
+                wire:model="remember"
+                class="rounded"
+                style="accent-color: var(--color-brand-primary-700);"
+            />
+            Lembrar-me
+        </label>
 
-        <button
-            type="submit"
-            class="btn-primary w-full rounded-lg px-4 py-2.5 text-sm font-semibold"
-        >
+        <button type="submit" class="btn btn-primary w-full justify-center">
             <span wire:loading.remove>Entrar</span>
             <span wire:loading>Entrando…</span>
         </button>

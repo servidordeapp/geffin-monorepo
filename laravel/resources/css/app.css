@@ -226,31 +226,6 @@ body {
 .t-mono     { font-family: var(--font-mono); font-size: var(--text-sm); font-weight: 500; font-variant-numeric: tabular-nums; color: var(--fg-1); }
 .t-numeric  { font-variant-numeric: tabular-nums; font-feature-settings: "tnum" 1, "lnum" 1; }
 
-/* ── Form components ── */
-.form-input {
-    border: 1px solid var(--border-default);
-    color: var(--fg-1);
-    background: var(--bg-surface);
-    transition: border-color var(--duration-fast), box-shadow var(--duration-fast);
-}
-
-.form-input::placeholder {
-    color: var(--fg-3);
-}
-
-.form-input:focus {
-    border-color: var(--border-focus);
-    box-shadow: var(--shadow-focus);
-}
-
-.form-input--error {
-    border-color: var(--color-semantic-danger);
-}
-
-.form-input--error:focus {
-    box-shadow: var(--shadow-focus-danger);
-}
-
 /* ── Buttons (admin) ── */
 .btn {
     font-family: inherit;
@@ -363,18 +338,3 @@ body {
 .delta-down { color: var(--color-semantic-danger);  font-weight: 600; }
 
 
-/* ── Legacy form-input (Livewire login) ── */
-.btn-primary {
-    background: var(--bg-brand);
-    color: var(--fg-on-brand);
-    transition: background var(--duration-fast), box-shadow var(--duration-fast);
-}
-
-.btn-primary:hover {
-    background: var(--color-brand-primary-700);
-}
-
-.btn-primary:focus {
-    outline: none;
-    box-shadow: var(--shadow-focus);
-}
