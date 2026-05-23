@@ -7,6 +7,7 @@
         <title>{{ $title ?? config('app.name') }}</title>
 
         @vite(['resources/css/app.css', 'resources/js/app.js'])
+        <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js" defer></script>
 
         @livewireStyles
     </head>
@@ -40,5 +41,9 @@
         </div>
 
         @livewireScripts
+        <script>
+            document.addEventListener('DOMContentLoaded', () => lucide.createIcons());
+            document.addEventListener('livewire:navigated', () => lucide.createIcons());
+        </script>
     </body>
 </html>
