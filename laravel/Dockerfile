@@ -21,7 +21,7 @@ RUN --mount=type=cache,target=/tmp/cache \
 # =========================================================================
 # Stage 2 — Frontend assets (Vite + Tailwind)
 # =========================================================================
-FROM node:22-alpine AS assets
+FROM node:24-alpine AS assets
 
 WORKDIR /app
 
