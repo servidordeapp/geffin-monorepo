@@ -2,7 +2,7 @@ COMPOSE := docker compose
 API     := $(COMPOSE) exec api
 
 .PHONY: up down build shell artisan tinker migrate seed fresh test logs \
-        up-workers down-workers rabbitmq-ui minio-ui
+        up-workers down-workers rabbitmq-ui minio-ui composer
 
 # ─── Lifecycle ────────────────────────────────────────────────────────────────
 up:
@@ -21,6 +21,9 @@ build:
 	$(COMPOSE) build --no-cache
 
 # ─── API Laravel ──────────────────────────────────────────────────────────────
+composer:
+	$(API) composer $(filter-out $@,$(MAKECMDGOALS))
+
 shell:
 	$(API) bash
 
