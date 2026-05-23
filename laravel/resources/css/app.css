@@ -8,9 +8,55 @@
 @source '../**/*.js';
 
 @theme {
+    /* Brand */
+    --color-brand-primary-900: #0B2E5C;
+    --color-brand-primary-700: #1E40AF;
+    --color-brand-primary-500: #3B82F6;
+    --color-brand-primary-300: #93C5FD;
+    --color-brand-primary-100: #DBEAFE;
+    --color-brand-primary-50:  #EFF6FF;
+
+    /* Accent */
+    --color-accent-green-700: #047857;
+    --color-accent-green-500: #10B981;
+    --color-accent-green-300: #6EE7B7;
+    --color-accent-green-100: #D1FAE5;
+
+    /* Neutrals */
+    --color-neutral-0:   #FFFFFF;
+    --color-neutral-50:  #F8FAFC;
+    --color-neutral-100: #F1F5F9;
+    --color-neutral-200: #E2E8F0;
+    --color-neutral-300: #CBD5E1;
+    --color-neutral-400: #94A3B8;
+    --color-neutral-500: #64748B;
+    --color-neutral-600: #475569;
+    --color-neutral-700: #334155;
+    --color-neutral-800: #1E293B;
+    --color-neutral-900: #0F172A;
+
+    /* Semantic */
+    --color-semantic-success: #10B981;
+    --color-semantic-warning: #F59E0B;
+    --color-semantic-danger:  #EF4444;
+    --color-semantic-info:    #3B82F6;
+
+    /* Typography */
     --font-sans:    "Switzer", "Inter", ui-sans-serif, system-ui, -apple-system, sans-serif;
     --font-mono:    "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
     --font-display: "Switzer", "Inter", ui-sans-serif, system-ui, sans-serif;
+
+    /* Radius */
+    --radius-sm:   0.375rem;
+    --radius-md:   0.5rem;
+    --radius-lg:   0.75rem;
+    --radius-xl:   1rem;
+    --radius-full: 9999px;
+
+    /* Shadows */
+    --shadow-sm: 0 1px 2px rgb(15 23 42 / 0.06);
+    --shadow-md: 0 4px 12px rgb(15 23 42 / 0.08);
+    --shadow-lg: 0 12px 32px rgb(15 23 42 / 0.12);
 }
 
 :root {
@@ -163,6 +209,22 @@ body {
 *::after {
     box-sizing: border-box;
 }
+
+/* ── Typography ── */
+.t-display  { font-family: var(--font-display); font-size: var(--text-5xl); font-weight: 700; line-height: var(--leading-tight);  letter-spacing: var(--tracking-tight); color: var(--fg-1); }
+.t-h1       { font-family: var(--font-display); font-size: var(--text-4xl); font-weight: 700; line-height: var(--leading-tight);  letter-spacing: var(--tracking-tight); color: var(--fg-1); }
+.t-h2       { font-family: var(--font-display); font-size: var(--text-3xl); font-weight: 700; line-height: var(--leading-snug);   letter-spacing: var(--tracking-snug);  color: var(--fg-1); }
+.t-h3       { font-size: var(--text-2xl);  font-weight: 600; line-height: var(--leading-snug);   color: var(--fg-1); }
+.t-h4       { font-size: var(--text-xl);   font-weight: 600; line-height: var(--leading-snug);   color: var(--fg-1); }
+.t-h5       { font-size: var(--text-lg);   font-weight: 600; line-height: var(--leading-snug);   color: var(--fg-1); }
+.t-body-lg  { font-size: var(--text-lg);   font-weight: 400; line-height: var(--leading-normal); color: var(--fg-1); }
+.t-body     { font-size: var(--text-base); font-weight: 400; line-height: var(--leading-normal); color: var(--fg-1); }
+.t-body-sm  { font-size: var(--text-sm);   font-weight: 400; line-height: var(--leading-normal); color: var(--fg-2); }
+.t-label    { font-size: var(--text-sm);   font-weight: 500; line-height: var(--leading-snug);   color: var(--fg-1); }
+.t-caption  { font-size: var(--text-xs);   font-weight: 500; line-height: var(--leading-snug);   color: var(--fg-2); }
+.t-overline { font-size: var(--text-xs);   font-weight: 600; line-height: 1; letter-spacing: var(--tracking-wide); text-transform: uppercase; color: var(--fg-2); }
+.t-mono     { font-family: var(--font-mono); font-size: var(--text-sm); font-weight: 500; font-variant-numeric: tabular-nums; color: var(--fg-1); }
+.t-numeric  { font-variant-numeric: tabular-nums; font-feature-settings: "tnum" 1, "lnum" 1; }
 
 /* ── Form components ── */
 .form-input {
