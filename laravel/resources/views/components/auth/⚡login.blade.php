@@ -32,15 +32,15 @@ new #[Layout('layouts.guest')] class extends Component {
 ?>
 
 <div class="w-full">
-    <form wire:submit="login" class="space-y-5">
+    <form wire:submit="login" class="space-y-5" novalidate>
         <label class="field w-full" for="email">
-            <span class="field-label">E-mail</span>
+            <span class="field-label">E-mail institucional</span>
             <input
                 type="email"
                 id="email"
                 wire:model="email"
                 class="input w-full @error('email') error @enderror"
-                placeholder="seu@email.com"
+                placeholder="voce@escola.edu.br"
                 autofocus
                 autocomplete="email"
             />
@@ -50,7 +50,12 @@ new #[Layout('layouts.guest')] class extends Component {
         </label>
 
         <label class="field w-full" for="password">
-            <span class="field-label">Senha</span>
+            <span class="flex items-center justify-between">
+                <span class="field-label">Senha</span>
+                <a href="#" class="t-caption" style="color: var(--fg-link); text-decoration: none; font-weight: 500;">
+                    Esqueci minha senha
+                </a>
+            </span>
             <input
                 type="password"
                 id="password"
@@ -64,19 +69,32 @@ new #[Layout('layouts.guest')] class extends Component {
             @enderror
         </label>
 
-        <label class="flex items-center gap-2 t-body-sm cursor-pointer">
+        <label class="flex items-center gap-2 t-body-sm cursor-pointer select-none">
             <input
                 type="checkbox"
                 wire:model="remember"
                 class="rounded"
                 style="accent-color: var(--color-brand-primary-700);"
             />
-            Lembrar-me
+            Manter sessão neste dispositivo
         </label>
 
-        <button type="submit" class="btn btn-primary w-full justify-center">
-            <span wire:loading.remove>Entrar</span>
-            <span wire:loading>Entrando…</span>
+        <button type="submit" class="btn btn-primary w-full justify-center" wire:loading.attr="disabled">
+            <span wire:loading.remove wire:target="login" class="inline-flex items-center gap-2">
+                Entrar
+                <i data-lucide="arrow-right" style="width:16px;height:16px;"></i>
+            </span>
+            <span wire:loading wire:target="login" class="inline-flex items-center gap-2">
+                <i data-lucide="loader-circle" class="animate-spin" style="width:16px;height:16px;"></i>
+                Entrando…
+            </span>
         </button>
+
+        <p class="t-caption" style="text-align:center; color: var(--fg-3);">
+            Ao continuar você concorda com os
+            <a href="#" style="color: var(--fg-link); text-decoration: none;">Termos</a>
+            e a
+            <a href="#" style="color: var(--fg-link); text-decoration: none;">Política de Privacidade</a>.
+        </p>
     </form>
 </div>
