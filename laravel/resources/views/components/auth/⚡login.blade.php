@@ -34,50 +34,55 @@ new #[Layout('layouts.guest')] class extends Component {
 <div class="w-full">
     <form wire:submit="login" class="space-y-5">
         <div>
-            <label for="email" class="block text-sm font-medium text-gray-700 mb-1">
+            <label for="email" class="block text-sm font-medium mb-1" style="color: var(--fg-2);">
                 E-mail
             </label>
             <input
                 type="email"
                 id="email"
                 wire:model="email"
-                class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition @error('email') border-red-400 @enderror"
+                class="form-input w-full rounded-lg px-4 py-2.5 text-sm outline-none @error('email') form-input--error @enderror"
                 placeholder="seu@email.com"
                 autofocus
                 autocomplete="email"
             />
             @error('email')
-                <p class="mt-1 text-xs text-red-500">{{ $message }}</p>
+                <p class="mt-1 text-xs" style="color: var(--color-semantic-danger);">{{ $message }}</p>
             @enderror
         </div>
 
         <div>
-            <label for="password" class="block text-sm font-medium text-gray-700 mb-1">
+            <label for="password" class="block text-sm font-medium mb-1" style="color: var(--fg-2);">
                 Senha
             </label>
             <input
                 type="password"
                 id="password"
                 wire:model="password"
-                class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition @error('password') border-red-400 @enderror"
+                class="form-input w-full rounded-lg px-4 py-2.5 text-sm outline-none @error('password') form-input--error @enderror"
                 placeholder="••••••••"
                 autocomplete="current-password"
             />
             @error('password')
-                <p class="mt-1 text-xs text-red-500">{{ $message }}</p>
+                <p class="mt-1 text-xs" style="color: var(--color-semantic-danger);">{{ $message }}</p>
             @enderror
         </div>
 
-        <div class="flex items-center justify-between">
-            <label class="flex items-center gap-2 text-sm text-gray-600 cursor-pointer">
-                <input type="checkbox" wire:model="remember" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500" />
+        <div class="flex items-center">
+            <label class="flex items-center gap-2 text-sm cursor-pointer" style="color: var(--fg-2);">
+                <input
+                    type="checkbox"
+                    wire:model="remember"
+                    class="rounded"
+                    style="accent-color: var(--color-brand-primary-700);"
+                />
                 Lembrar-me
             </label>
         </div>
 
         <button
             type="submit"
-            class="w-full rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition"
+            class="btn-primary w-full rounded-lg px-4 py-2.5 text-sm font-semibold"
         >
             <span wire:loading.remove>Entrar</span>
             <span wire:loading>Entrando…</span>
