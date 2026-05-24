@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\Auth\PasswordResetEventTypeEnum;
 use App\Models\PasswordResetAuditEvent;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
@@ -37,7 +38,7 @@ it('accepts null user_id', function () {
     expect($event->user_id)->toBeNull();
 });
 
-it('accepts each of the six event_type enum values', function (string $eventType) {
+it('accepts each of the six event_type enum values', function (PasswordResetEventTypeEnum $eventType) {
     $event = PasswordResetAuditEvent::create([
         'event_type' => $eventType,
         'email_hash' => PasswordResetAuditEvent::emailHash('test@example.com'),
@@ -46,4 +47,4 @@ it('accepts each of the six event_type enum values', function (string $eventType
     ]);
 
     expect($event->event_type)->toBe($eventType);
-})->with(['requested', 'email_sent', 'link_opened', 'password_changed', 'token_rejected', 'request_throttled']);
+})->with(PasswordResetEventTypeEnum::cases());

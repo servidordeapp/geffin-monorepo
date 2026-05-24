@@ -2,6 +2,7 @@
 
 namespace App\Services\Auth;
 
+use App\Enums\Auth\PasswordResetEventTypeEnum;
 use App\Models\PasswordResetAuditEvent;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -21,7 +22,7 @@ class PasswordResetService
         $user = $this->resolveAccount($email);
 
         PasswordResetAuditEvent::create([
-            'event_type' => 'requested',
+            'event_type' => PasswordResetEventTypeEnum::Requested,
             'user_id' => $user?->id,
             'email_hash' => PasswordResetAuditEvent::emailHash($email),
             'ip_address' => $request->ip(),
@@ -45,7 +46,7 @@ class PasswordResetService
         $user = $this->resolveAccount($email);
 
         PasswordResetAuditEvent::create([
-            'event_type' => 'link_opened',
+            'event_type' => PasswordResetEventTypeEnum::LinkOpened,
             'user_id' => $user?->id,
             'email_hash' => PasswordResetAuditEvent::emailHash($email),
             'ip_address' => $request->ip(),
@@ -74,7 +75,7 @@ class PasswordResetService
                     // TODO(sanctum): revoke personal access tokens once Sanctum is configured
 
                     PasswordResetAuditEvent::create([
-                        'event_type' => 'password_changed',
+                        'event_type' => PasswordResetEventTypeEnum::PasswordChanged,
                         'user_id' => $user->id,
                         'email_hash' => PasswordResetAuditEvent::emailHash($user->email),
                         'ip_address' => $request->ip(),
@@ -87,7 +88,7 @@ class PasswordResetService
         });
 
         if ($status !== Password::PASSWORD_RESET) {
-            $eventType = $status === Password::RESET_THROTTLED ? 'request_throttled' : 'token_rejected';
+            $eventType = $status === Password::RESET_THROTTLED ? PasswordResetEventTypeEnum::RequestThrottled : PasswordResetEventTypeEnum::TokenRejected;
             $outcome = $status === Password::RESET_THROTTLED ? 'throttled' : 'rejected';
 
             PasswordResetAuditEvent::create([
