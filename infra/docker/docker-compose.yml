@@ -6,6 +6,7 @@ name: geffin
 # Services:
 #   api      → Laravel (PHP-FPM)
 #   web      → Nginx reverse proxy (8080 → api:9000)
+#   worker   → Laravel queue worker (profile: worker — start with make up-workers)
 #   mysql    → MySQL 8.x (primary datastore)
 #   mailpit  → SMTP catcher + UI (smtp:1025, ui:8025)
 # ─────────────────────────────────────────────────────────────────────────────
@@ -76,6 +77,27 @@ services:
       timeout: 5s
       retries: 3
       start_period: 20s
+
+  worker:
+    image: geffin/api:local
+    container_name: geffin-worker
+    restart: unless-stopped
+    profiles: [worker]
+    command: ["php", "artisan", "queue:work", "--sleep=3", "--tries=3", "--timeout=90"]
+    environment:
+      <<: *app-env
+    volumes:
+      - ../../laravel:/var/www/html
+      - vendor:/var/www/html/vendor
+      - ../../laravel/storage:/var/www/html/storage
+    depends_on:
+      api:
+        condition: service_healthy
+      mysql:
+        condition: service_healthy
+      mailpit:
+        condition: service_started
+    networks: [geffin]
 
   web:
     image: nginx:1.27-alpine

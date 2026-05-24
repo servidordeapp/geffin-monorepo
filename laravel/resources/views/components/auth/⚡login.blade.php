@@ -52,7 +52,7 @@ new #[Layout('layouts.guest')] class extends Component {
         <label class="field w-full" for="password">
             <span class="flex items-center justify-between">
                 <span class="field-label">Senha</span>
-                <a href="#" class="t-caption" style="color: var(--fg-link); text-decoration: none; font-weight: 500;">
+                <a href="{{ route('password.request') }}" wire:navigate class="t-caption" style="color: var(--fg-link); text-decoration: none; font-weight: 500;">
                     Esqueci minha senha
                 </a>
             </span>

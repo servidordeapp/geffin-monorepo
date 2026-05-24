@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Livewire\Livewire;
@@ -63,7 +65,8 @@ it('logs out authenticated user', function () {
     $user = User::factory()->create();
 
     $this->actingAs($user)
-        ->post('/logout')
+        ->withSession(['_token' => 'test-token'])
+        ->post('/logout', ['_token' => 'test-token'])
         ->assertRedirect('/login');
 
     expect(auth()->check())->toBeFalse();

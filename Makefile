@@ -2,7 +2,7 @@ COMPOSE := docker compose
 API     := $(COMPOSE) exec api
 
 .PHONY: up down build shell artisan tinker migrate seed fresh test logs \
-        up-workers down-workers rabbitmq-ui minio-ui composer
+        up-workers down-workers rabbitmq-ui minio-ui composer pint stan
 
 # ─── Lifecycle ────────────────────────────────────────────────────────────────
 up:
@@ -44,6 +44,12 @@ fresh:
 
 test:
 	$(API) php artisan test
+
+pint:
+	$(API) vendor/bin/pint
+
+stan:
+	$(API) vendor/bin/phpstan analyse --memory-limit=2G
 
 logs:
 	$(COMPOSE) logs -f api

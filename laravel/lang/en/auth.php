@@ -1,20 +1,31 @@
 <?php
 
+declare(strict_types=1);
+
 return [
-
-    /*
-    |--------------------------------------------------------------------------
-    | Authentication Language Lines
-    |--------------------------------------------------------------------------
-    |
-    | The following language lines are used during authentication for various
-    | messages that we need to display to the user. You are free to modify
-    | these language lines according to your application's requirements.
-    |
-    */
-
     'failed' => 'These credentials do not match our records.',
     'password' => 'The provided password is incorrect.',
     'throttle' => 'Too many login attempts. Please try again in :seconds seconds.',
 
+    'forgot' => [
+        'title' => 'Forgot your password',
+        'subtitle' => 'Enter your email and we will send you a link to create a new password.',
+        'submit' => 'Send reset link',
+        'back_to_login' => 'Back to login',
+    ],
+
+    'reset' => [
+        'title' => 'Create new password',
+        'subtitle' => 'Choose a strong password with at least 12 characters.',
+        'password_label' => 'New password',
+        'password_confirmation_label' => 'Confirm new password',
+        'submit' => 'Update password',
+        'request_new_link' => 'Request new link',
+    ],
+
+    'mail' => [
+        'reset' => [
+            'subject' => 'Reset your Geffin password',
+        ],
+    ],
 ];
