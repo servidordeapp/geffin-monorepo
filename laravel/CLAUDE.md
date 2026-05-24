@@ -163,6 +163,13 @@ This project has domain-specific skills available in `**/skills/**`. You MUST ac
 
 </laravel-boost-guidelines>
 
+## Convenções do Projeto
+
+### URLs
+
+- Segmentos de URL devem ser escritos em português (ex: `/senha/esqueci`, `/senha/redefinir/{token}`, `/entrar`, `/sair`).
+- Nomes de rotas (`->name(...)`) permanecem em inglês por convenção do Laravel e compatibilidade com pacotes do ecossistema.
+
 <!-- SPECKIT START -->
 For additional context about technologies to be used, project structure,
 shell commands, and other important information, read the current plan at
