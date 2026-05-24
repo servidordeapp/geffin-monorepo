@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-#[Fillable(['event_type', 'user_id', 'email_hash', 'ip_address', 'user_agent', 'outcome', 'reason'])]
+#[Fillable(['event_type', 'user_id', 'email_hash', 'ip_address', 'user_agent', 'outcome', 'reason', 'created_at'])]
 class PasswordResetAuditEvent extends Model
 {
     public const UPDATED_AT = null;
