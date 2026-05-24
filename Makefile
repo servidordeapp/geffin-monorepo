@@ -2,7 +2,7 @@ COMPOSE := docker compose
 API     := $(COMPOSE) exec api
 
 .PHONY: up down build shell artisan tinker migrate seed fresh test logs \
-        up-workers down-workers rabbitmq-ui minio-ui composer
+        up-workers down-workers rabbitmq-ui minio-ui composer pint
 
 # ─── Lifecycle ────────────────────────────────────────────────────────────────
 up:
@@ -44,6 +44,9 @@ fresh:
 
 test:
 	$(API) php artisan test
+
+pint:
+	$(API) vendor/bin/pint
 
 logs:
 	$(COMPOSE) logs -f api
