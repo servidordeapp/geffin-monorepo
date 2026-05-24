@@ -2,21 +2,18 @@
 
 namespace App\Providers;
 
+use App\Services\Auth\PasswordResetRateLimiter;
+use App\Services\Auth\PasswordResetService;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
 {
-    /**
-     * Register any application services.
-     */
     public function register(): void
     {
-        //
+        $this->app->singleton(PasswordResetRateLimiter::class);
+        $this->app->singleton(PasswordResetService::class);
     }
 
-    /**
-     * Bootstrap any application services.
-     */
     public function boot(): void
     {
         //

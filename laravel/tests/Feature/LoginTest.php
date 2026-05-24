@@ -63,7 +63,8 @@ it('logs out authenticated user', function () {
     $user = User::factory()->create();
 
     $this->actingAs($user)
-        ->post('/logout')
+        ->withSession(['_token' => 'test-token'])
+        ->post('/logout', ['_token' => 'test-token'])
         ->assertRedirect('/login');
 
     expect(auth()->check())->toBeFalse();
