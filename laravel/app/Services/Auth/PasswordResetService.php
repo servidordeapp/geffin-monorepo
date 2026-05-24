@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Services\Auth;
 
 use App\Enums\Auth\PasswordResetEventTypeEnum;
@@ -15,7 +17,8 @@ class PasswordResetService
 {
     public function __construct(
         public PasswordResetRateLimiter $rateLimiter
-    ) {}
+    ) {
+    }
 
     public function request(string $email, Request $request): void
     {

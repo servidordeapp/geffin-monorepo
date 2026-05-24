@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 return [
     'sent' => 'If an account exists for that email address, you will receive password reset instructions shortly.',
     'reset' => 'Your password has been reset. You can now log in with your new password.',

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use App\Enums\Auth\PasswordResetEventTypeEnum;
 use App\Models\PasswordResetAuditEvent;
 use Illuminate\Foundation\Testing\RefreshDatabase;

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 return [
     'failed' => 'Essas credenciais não foram encontradas em nossos registros.',
     'password' => 'A senha informada está incorreta.',

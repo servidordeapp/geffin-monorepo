@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use App\Models\PasswordResetAuditEvent;
 use App\Models\User;
 use App\Notifications\PasswordResetRequested;

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Notifications;
 
 use App\Models\User;
@@ -18,7 +20,9 @@ class PasswordResetRequested extends Notification implements ShouldQueue
     /** @var int[] */
     public array $backoff = [10, 60, 300];
 
-    public function __construct(public string $token) {}
+    public function __construct(public string $token)
+    {
+    }
 
     /** @return string[] */
     public function via(object $notifiable): array
@@ -35,7 +39,7 @@ class PasswordResetRequested extends Notification implements ShouldQueue
         );
 
         // TODO(bounce): add bounce/failure webhook handler to write email_sent:failed audit row
-        return (new MailMessage)
+        return (new MailMessage())
             ->subject(__('auth.mail.reset.subject'))
             ->markdown('mail.auth.password-reset', [
                 'url' => $url,

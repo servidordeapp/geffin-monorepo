@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 return [
     'sent' => 'Se uma conta existir para este e-mail, você receberá instruções em instantes.',
     'reset' => 'Senha atualizada. Faça login com a nova senha.',
