@@ -173,5 +173,5 @@ This project has domain-specific skills available in `**/skills/**`. You MUST ac
 <!-- SPECKIT START -->
 For additional context about technologies to be used, project structure,
 shell commands, and other important information, read the current plan at
-`specs/001-password-reset-email/plan.md`.
+`specs/002-multi-tenant-database/plan.md`.
 <!-- SPECKIT END -->

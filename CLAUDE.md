@@ -210,5 +210,5 @@ To work on an existing feature without checking out the branch, set `SPECIFY_FEA
 <!-- SPECKIT START -->
 For additional context about technologies to be used, project structure,
 shell commands, and other important information, read the current plan at
-`laravel/specs/001-password-reset-email/plan.md`.
+`laravel/specs/002-multi-tenant-database/plan.md`.
 <!-- SPECKIT END -->
