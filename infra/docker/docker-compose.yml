@@ -138,6 +138,7 @@ services:
       - "${DB_PORT_HOST:-3306}:3306"
     volumes:
       - mysql-data:/var/lib/mysql
+      - ../../platform/database/init:/docker-entrypoint-initdb.d:ro
     networks: [geffin]
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-u", "root", "-p${DB_ROOT_PASSWORD:-rootsecret}"]
