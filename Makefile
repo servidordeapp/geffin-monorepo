@@ -62,6 +62,7 @@ test:
 coverage:
 	$(COMPOSE) exec $(TEST_ENV) -e XDEBUG_MODE=off api sh -c "\
 	    php artisan config:clear >/dev/null 2>&1 && \
+	    php artisan route:clear >/dev/null 2>&1 && \
 	    php -d pcov.enabled=1 -d memory_limit=512M \
 	        artisan test --coverage --min=$(COVERAGE_MIN) $(filter-out $@,$(MAKECMDGOALS))"
 
