@@ -13,7 +13,9 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        //
+        if (($_SERVER['APP_ENV'] ?? null) === 'testing' || ($_ENV['APP_ENV'] ?? null) === 'testing') {
+            $middleware->remove(\Illuminate\Foundation\Http\Middleware\PreventRequestForgery::class);
+        }
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //
