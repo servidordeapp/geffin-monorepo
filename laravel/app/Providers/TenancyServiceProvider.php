@@ -9,7 +9,6 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 use Stancl\JobPipeline\JobPipeline;
 use Stancl\Tenancy\Events;
-use Stancl\Tenancy\Jobs;
 use Stancl\Tenancy\Listeners;
 use Stancl\Tenancy\Middleware;
 
@@ -18,36 +17,23 @@ class TenancyServiceProvider extends ServiceProvider
     // By default, no namespace is used to support the callable array syntax.
     public static string $controllerNamespace = '';
 
-    public function events()
+    /** @return array<class-string, array<int, class-string|\Closure|JobPipeline>> */
+    public function events(): array
     {
         return [
             // Tenant events
             Events\CreatingTenant::class => [],
-            Events\TenantCreated::class => [
-                JobPipeline::make([
-                    Jobs\CreateDatabase::class,
-                    Jobs\MigrateDatabase::class,
-                    // Jobs\SeedDatabase::class,
-
-                    // Your own jobs to prepare the tenant.
-                    // Provision API keys, create S3 buckets, anything you want!
-
-                ])->send(function (Events\TenantCreated $event) {
-                    return $event->tenant;
-                })->shouldBeQueued(false), // `false` by default, but you probably want to make this `true` for production.
-            ],
+            // Database creation + migration is handled by
+            // App\Modules\Tenancy\Jobs\ProvisionTenantDatabase (queued),
+            // dispatched from TenantProvisioningService — the synchronous
+            // stancl pipeline is intentionally empty.
+            Events\TenantCreated::class => [],
             Events\SavingTenant::class => [],
             Events\TenantSaved::class => [],
             Events\UpdatingTenant::class => [],
             Events\TenantUpdated::class => [],
             Events\DeletingTenant::class => [],
-            Events\TenantDeleted::class => [
-                JobPipeline::make([
-                    Jobs\DeleteDatabase::class,
-                ])->send(function (Events\TenantDeleted $event) {
-                    return $event->tenant;
-                })->shouldBeQueued(false), // `false` by default, but you probably want to make this `true` for production.
-            ],
+            Events\TenantDeleted::class => [], // Jobs\DeleteDatabase intentionally removed — soft-delete preserves tenant DB
 
             // Domain events
             Events\CreatingDomain::class => [],
@@ -92,20 +78,20 @@ class TenancyServiceProvider extends ServiceProvider
         ];
     }
 
-    public function register()
+    public function register(): void
     {
         //
     }
 
-    public function boot()
+    public function boot(): void
     {
         $this->bootEvents();
         $this->mapRoutes();
-
         $this->makeTenancyMiddlewareHighestPriority();
+        $this->configureTenancyOnFail();
     }
 
-    protected function bootEvents()
+    protected function bootEvents(): void
     {
         foreach ($this->events() as $event => $listeners) {
             foreach ($listeners as $listener) {
@@ -118,7 +104,7 @@ class TenancyServiceProvider extends ServiceProvider
         }
     }
 
-    protected function mapRoutes()
+    protected function mapRoutes(): void
     {
         $this->app->booted(function () {
             if (file_exists(base_path('routes/tenant.php'))) {
@@ -128,7 +114,21 @@ class TenancyServiceProvider extends ServiceProvider
         });
     }
 
-    protected function makeTenancyMiddlewareHighestPriority()
+    protected function configureTenancyOnFail(): void
+    {
+        Middleware\InitializeTenancyByDomain::$onFail = function (\Throwable $e, \Illuminate\Http\Request $request, \Closure $next) {
+            /** @var string[] $centralDomains */
+            $centralDomains = config('tenancy.central_domains', []);
+
+            if (in_array($request->getHost(), $centralDomains, true)) {
+                return $next($request);
+            }
+
+            throw $e;
+        };
+    }
+
+    protected function makeTenancyMiddlewareHighestPriority(): void
     {
         $tenancyMiddleware = [
             // Even higher priority than the initialization middleware
@@ -141,8 +141,9 @@ class TenancyServiceProvider extends ServiceProvider
             Middleware\InitializeTenancyByRequestData::class,
         ];
 
+        $kernel = $this->app->make(\Illuminate\Contracts\Http\Kernel::class);
         foreach (array_reverse($tenancyMiddleware) as $middleware) {
-            $this->app[\Illuminate\Contracts\Http\Kernel::class]->prependToMiddlewarePriority($middleware);
+            $kernel->prependToMiddlewarePriority($middleware);
         }
     }
 }
