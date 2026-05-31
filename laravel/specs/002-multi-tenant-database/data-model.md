@@ -107,8 +107,8 @@ and gives the isolation test (SC-002) a real table to write/read a marker row.
 
 ## Enums
 
-- `App\Modules\Tenancy\Enums\TenantStatus`: `Active`, `Inactive` (TitleCase keys).
-- `App\Modules\Tenancy\Enums\TenantAuditAction`: `Created`, `Updated`,
+- `App\Modules\Tenancy\Enums\TenantStatusEnum`: `Active`, `Inactive` (TitleCase keys).
+- `App\Modules\Tenancy\Enums\TenantAuditActionEnum`: `Created`, `Updated`,
   `SoftDeleted`, `Restored`, `Migrated`, `ProvisionFailed`.
 
 ## Validation (Form Requests)
