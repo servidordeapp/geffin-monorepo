@@ -33,62 +33,45 @@ new #[Layout('layouts.guest')] class extends Component {
 
 <div class="w-full">
     <form wire:submit="login" class="space-y-5" novalidate>
-        <label class="field w-full" for="email">
-            <span class="field-label">E-mail institucional</span>
-            <input
-                type="email"
-                id="email"
-                wire:model="email"
-                class="input w-full @error('email') error @enderror"
-                placeholder="voce@escola.edu.br"
-                autofocus
-                autocomplete="email"
-            />
-            @error('email')
-                <span class="t-caption" style="color: var(--color-semantic-danger);">{{ $message }}</span>
-            @enderror
-        </label>
+        <x-ui.input
+            type="email"
+            name="email"
+            label="E-mail institucional"
+            wire:model="email"
+            placeholder="voce@escola.edu.br"
+            autofocus
+            autocomplete="email"
+        />
 
-        <label class="field w-full" for="password">
-            <span class="flex items-center justify-between">
-                <span class="field-label">Senha</span>
-                <a href="{{ route('password.request') }}" wire:navigate class="t-caption" style="color: var(--fg-link); text-decoration: none; font-weight: 500;">
-                    Esqueci minha senha
-                </a>
-            </span>
-            <input
-                type="password"
-                id="password"
-                wire:model="password"
-                class="input w-full @error('password') error @enderror"
-                placeholder="••••••••"
-                autocomplete="current-password"
-            />
-            @error('password')
-                <span class="t-caption" style="color: var(--color-semantic-danger);">{{ $message }}</span>
-            @enderror
-        </label>
+        <x-ui.input
+            type="password"
+            name="password"
+            wire:model="password"
+            placeholder="••••••••"
+            autocomplete="current-password"
+        >
+            <x-slot:label>
+                <span class="flex items-center justify-between">
+                    <span>Senha</span>
+                    <a href="{{ route('password.request') }}" wire:navigate class="t-caption" style="color: var(--fg-link); text-decoration: none; font-weight: 500;">
+                        Esqueci minha senha
+                    </a>
+                </span>
+            </x-slot:label>
+        </x-ui.input>
 
-        <label class="flex items-center gap-2 t-body-sm cursor-pointer select-none">
-            <input
-                type="checkbox"
-                wire:model="remember"
-                class="rounded"
-                style="accent-color: var(--color-brand-primary-700);"
-            />
-            Manter sessão neste dispositivo
-        </label>
+        <x-ui.checkbox wire:model="remember" label="Manter sessão neste dispositivo" />
 
-        <button type="submit" class="btn btn-primary w-full justify-center" wire:loading.attr="disabled">
+        <flux:button type="submit" variant="primary" class="w-full justify-center" :loading="false" wire:loading.attr="disabled" wire:target="login">
             <span wire:loading.remove wire:target="login" class="inline-flex items-center gap-2">
                 Entrar
-                <i data-lucide="arrow-right" style="width:16px;height:16px;"></i>
+                <flux:icon name="arrow-right" class="size-4" />
             </span>
             <span wire:loading wire:target="login" class="inline-flex items-center gap-2">
-                <i data-lucide="loader-circle" class="animate-spin" style="width:16px;height:16px;"></i>
+                <flux:icon name="loading" class="size-4 animate-spin" />
                 Entrando…
             </span>
-        </button>
+        </flux:button>
 
         <p class="t-caption" style="text-align:center; color: var(--fg-3);">
             Ao continuar você concorda com os

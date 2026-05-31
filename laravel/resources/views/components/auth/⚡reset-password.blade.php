@@ -78,61 +78,47 @@ new #[Layout('layouts.guest')] class extends Component {
 
 <div class="w-full">
     <form wire:submit="updatePassword" class="space-y-5" novalidate>
-        <div class="space-y-1">
-            <p class="t-body-sm" style="color: var(--fg-2);">
-                {{ __('auth.reset.subtitle') }}
-            </p>
-        </div>
+        <p class="t-body-sm" style="color: var(--fg-2);">
+            {{ __('auth.reset.subtitle') }}
+        </p>
 
         <input type="hidden" wire:model="token" />
         <input type="hidden" wire:model="email" />
 
         @if($tokenError)
-            <div class="t-body-sm" style="color: var(--color-semantic-danger);">
+            <x-ui.alert variant="danger">
                 <p>{{ $tokenError }}</p>
-                <a href="{{ route('password.request') }}" wire:navigate style="color: var(--fg-link); text-decoration: none;">
+                <a href="{{ route('password.request') }}" wire:navigate style="color: inherit; text-decoration: underline; font-weight: 600;">
                     {{ __('auth.reset.request_new_link') }}
                 </a>
-            </div>
+            </x-ui.alert>
         @endif
 
-        <label class="field w-full" for="password">
-            <span class="field-label">{{ __('auth.reset.password_label') }}</span>
-            <input
-                type="password"
-                id="password"
-                wire:model="password"
-                class="input w-full @error('password') error @enderror"
-                autocomplete="new-password"
-            />
-            @error('password')
-                <span class="t-caption" style="color: var(--color-semantic-danger);">{{ $message }}</span>
-            @enderror
-        </label>
+        <x-ui.input
+            type="password"
+            name="password"
+            :label="__('auth.reset.password_label')"
+            wire:model="password"
+            autocomplete="new-password"
+        />
 
-        <label class="field w-full" for="password_confirmation">
-            <span class="field-label">{{ __('auth.reset.password_confirmation_label') }}</span>
-            <input
-                type="password"
-                id="password_confirmation"
-                wire:model="password_confirmation"
-                class="input w-full @error('password_confirmation') error @enderror"
-                autocomplete="new-password"
-            />
-            @error('password_confirmation')
-                <span class="t-caption" style="color: var(--color-semantic-danger);">{{ $message }}</span>
-            @enderror
-        </label>
+        <x-ui.input
+            type="password"
+            name="password_confirmation"
+            :label="__('auth.reset.password_confirmation_label')"
+            wire:model="password_confirmation"
+            autocomplete="new-password"
+        />
 
-        <button type="submit" class="btn btn-primary w-full justify-center" wire:loading.attr="disabled">
+        <flux:button type="submit" variant="primary" class="w-full justify-center" :loading="false" wire:loading.attr="disabled" wire:target="updatePassword">
             <span wire:loading.remove wire:target="updatePassword" class="inline-flex items-center gap-2">
                 {{ __('auth.reset.submit') }}
-                <i data-lucide="check" style="width:16px;height:16px;"></i>
+                <flux:icon name="check" class="size-4" />
             </span>
             <span wire:loading wire:target="updatePassword" class="inline-flex items-center gap-2">
-                <i data-lucide="loader-circle" class="animate-spin" style="width:16px;height:16px;"></i>
+                <flux:icon name="loading" class="size-4 animate-spin" />
                 {{ __('Atualizando…') }}
             </span>
-        </button>
+        </flux:button>
     </form>
 </div>
