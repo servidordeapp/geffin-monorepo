@@ -9,9 +9,10 @@ The Laravel Boost guidelines are specifically curated by Laravel maintainers for
 
 This application is a Laravel application and its main Laravel ecosystems package & versions are below. You are an expert with them all. Ensure you abide by these specific packages & versions.
 
-- php - 8.5
+- php - 8.4
 - laravel/framework (LARAVEL) - v13
 - laravel/prompts (PROMPTS) - v0
+- livewire/flux (FLUXUI_FREE) - v2
 - livewire/livewire (LIVEWIRE) - v4
 - larastan/larastan (LARASTAN) - v3
 - laravel/boost (BOOST) - v2
@@ -20,6 +21,7 @@ This application is a Laravel application and its main Laravel ecosystems packag
 - laravel/pint (PINT) - v1
 - pestphp/pest (PEST) - v4
 - phpunit/phpunit (PHPUNIT) - v12
+- tailwindcss (TAILWINDCSS) - v4
 
 ## Skills Activation
 
@@ -107,6 +109,13 @@ This project has domain-specific skills available in `**/skills/**`. You MUST ac
 
 - Laravel can be deployed using [Laravel Cloud](https://cloud.laravel.com/), which is the fastest way to deploy and scale production Laravel applications.
 
+=== tests rules ===
+
+# Test Enforcement
+
+- Every change must be programmatically tested. Write a new test or update an existing test, then run the affected tests to make sure they pass.
+- Run the minimum number of tests needed to ensure code quality and speed. Use `php artisan test --compact` with a specific filename or filter.
+
 === laravel/core rules ===
 
 # Do Things the Laravel Way
@@ -170,8 +179,20 @@ This project has domain-specific skills available in `**/skills/**`. You MUST ac
 - Segmentos de URL devem ser escritos em português (ex: `/senha/esqueci`, `/senha/redefinir/{token}`, `/entrar`, `/sair`).
 - Nomes de rotas (`->name(...)`) permanecem em inglês por convenção do Laravel e compatibilidade com pacotes do ecossistema.
 
+### Componentes de UI
+
+A consistência visual é obrigatória. **Sempre componha a interface a partir de componentes pré-definidos — nunca escreva CSS por página.**
+
+- **Biblioteca de componentes:** use os componentes `<x-ui.*>` em `resources/views/components/ui/`: `page-header`, `card`, `stat`/`stats`, `input`, `checkbox`, `locked`, `badge`, `alert`, `table`, `empty`, `detail-grid`/`detail-item`, `zone`. Antes de criar um componente novo, verifique se já existe um que sirva. Componente novo de UI vai em `components/ui/` e seu estilo compartilhado vai em `app.css` (nunca inline na página).
+- **Flux (free):** apenas `<flux:button>`, `<flux:icon>`, `<flux:dropdown>`, `<flux:tooltip>` e `<flux:separator>` estão disponíveis. Flux Pro **não** está licenciado — não use `<flux:input>`, `<flux:table>`, `<flux:card>`, `<flux:badge>`, `<flux:modal>`, etc. (lançam "Your install of Flux is not activated"). Para esses casos use o `<x-ui.*>` correspondente.
+- **Botões:** sempre `<flux:button>` (`variant="primary|ghost|danger"`). **Ícones:** sempre `<flux:icon name="..." />` (Heroicons). Ao usar um ícone "pelado" (sem `class`/tamanho), passe `variant="mini"` ou `variant="outline"` — um `<flux:icon>` sem atributos lança `UnhandledMatchError` por causa do `@blaze(fold)`.
+- **Sem CSS por página:** proibido `<style>` em views ou sistemas de classes `.alguma-coisa` específicos de uma tela. Tokens de design (`@theme`) e classes compartilhadas (`.ui-*`, `.btn`, `.card`, `.pill`, tipografia `.t-*`) ficam em `resources/css/app.css`. Para layout pontual use utilitários do Tailwind (`flex`, `gap-*`, `mt-*`), não `style="..."`.
+- **Layout único:** o shell canônico é o componente `<x-layouts.app>` (`resources/views/components/layouts/app.blade.php`); `layouts::app` (config `livewire.component_layout`) apenas delega para ele. Telas de autenticação usam `layouts.guest`.
+- **Tipografia:** a fonte é **Switzer** (`--font-sans` em `app.css`, definido depois do `@import` do Flux). Não deixe o Flux sobrescrever a fonte e não troque a tipografia.
+- **Build:** alterações de CSS/componentes exigem `npm run build` (ou `composer run dev`) no ambiente correto (container) — o `node_modules` do host é musl e não compila no host glibc.
+
 <!-- SPECKIT START -->
 For additional context about technologies to be used, project structure,
 shell commands, and other important information, read the current plan at
-`specs/001-password-reset-email/plan.md`.
+`specs/002-multi-tenant-database/plan.md`.
 <!-- SPECKIT END -->

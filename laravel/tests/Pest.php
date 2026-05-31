@@ -19,7 +19,16 @@ use Tests\TestCase;
 pest()->extend(TestCase::class)
  // ->use(RefreshDatabase::class)
     ->in('Feature', 'Unit')
-    ->beforeEach(fn () => $this->withoutVite());
+    ->beforeEach(fn () => $this->withoutVite())
+    ->afterEach(function () {
+        // An HTTP request that resolves an active tenant host leaves tenancy
+        // initialized and the default DB connection switched to the tenant.
+        // Ending it restores the central connection so RefreshDatabase rolls
+        // back the right transaction and the next test's migrations are clean.
+        if (function_exists('tenancy') && tenancy()->initialized) {
+            tenancy()->end();
+        }
+    });
 
 /*
 |--------------------------------------------------------------------------

@@ -7,7 +7,6 @@
         <title>{{ $title ?? config('app.name') }}</title>
 
         @vite(['resources/css/app.css', 'resources/js/app.js'])
-        <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js" defer></script>
 
         @livewireStyles
 
@@ -297,7 +296,7 @@
                 <div class="brand-content">
                     <div class="brand-mark">
                         <span class="brand-mark-dot">
-                            <i data-lucide="graduation-cap" style="width:16px;height:16px;"></i>
+                            <flux:icon name="academic-cap" class="size-4" />
                         </span>
                         {{ config('app.name', 'Geffin') }}
                     </div>
@@ -314,21 +313,21 @@
 
                     <div class="brand-pillars">
                         <div class="pillar">
-                            <span class="pillar-icon"><i data-lucide="shield-check" style="width:18px;height:18px;"></i></span>
+                            <span class="pillar-icon"><flux:icon name="shield-check" class="size-[18px]" /></span>
                             <div>
                                 <div class="pillar-title">Conformidade por padrão</div>
                                 <div class="pillar-body">LGPD, controles de acesso por perfil e logs imutáveis de cada operação.</div>
                             </div>
                         </div>
                         <div class="pillar">
-                            <span class="pillar-icon"><i data-lucide="receipt" style="width:18px;height:18px;"></i></span>
+                            <span class="pillar-icon"><flux:icon name="receipt-percent" class="size-[18px]" /></span>
                             <div>
                                 <div class="pillar-title">Idempotência financeira</div>
                                 <div class="pillar-body">Retries seguros em pagamentos, charges e estornos — sem duplicidade contábil.</div>
                             </div>
                         </div>
                         <div class="pillar">
-                            <span class="pillar-icon"><i data-lucide="line-chart" style="width:18px;height:18px;"></i></span>
+                            <span class="pillar-icon"><flux:icon name="presentation-chart-line" class="size-[18px]" /></span>
                             <div>
                                 <div class="pillar-title">Inteligência observadora</div>
                                 <div class="pillar-body">IA enriquece dados e antecipa inadimplência — sem nunca alterar o estado do negócio.</div>
@@ -348,7 +347,7 @@
                 <div class="form-topbar">
                     <span class="mobile-mark">
                         <span class="brand-mark-dot" style="width:24px;height:24px;border-radius:6px;">
-                            <i data-lucide="graduation-cap" style="width:14px;height:14px;"></i>
+                            <flux:icon name="academic-cap" class="size-[14px]" />
                         </span>
                         {{ config('app.name', 'Geffin') }}
                     </span>
@@ -379,9 +378,6 @@
         </main>
 
         @livewireScripts
-        <script>
-            document.addEventListener('DOMContentLoaded', () => lucide.createIcons());
-            document.addEventListener('livewire:navigated', () => lucide.createIcons());
-        </script>
+        @fluxScripts
     </body>
 </html>

@@ -14,6 +14,7 @@ class AdminUserSeeder extends Seeder
         User::factory()->createOne([
             'name' => 'Admin',
             'email' => 'admin@geffin.com.br',
+            'is_central_admin' => true,
         ]);
     }
 }

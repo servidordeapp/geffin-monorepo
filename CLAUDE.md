@@ -205,10 +205,11 @@ To work on an existing feature without checking out the branch, set `SPECIFY_FEA
 - **Frontends never call the API Core directly** — always through a BFF.
 - **Cross-domain effects ride events**, not synchronous calls. Side-effecting handlers must be idempotent.
 - **AI features observe, never mutate** — no business decisions inside the AI Gateway.
+- **UI is component-first (API Laravel).** Every Blade/Livewire screen is composed from the shared `<x-ui.*>` components (`laravel/resources/views/components/ui/`) plus the free Flux primitives (`<flux:button>`, `<flux:icon>`, `<flux:dropdown>`, `<flux:tooltip>`, `<flux:separator>`). Never write per-page `<style>` blocks or bespoke CSS class systems — design tokens and shared component styles live in `resources/css/app.css`. Flux Pro is **not** licensed, so do not use Pro components (input, table, card, badge, modal, etc.); use the `<x-ui.*>` equivalents. See `laravel/CLAUDE.md` → "Componentes de UI".
 - **Templates live in `.specify/templates/`** with an override stack (`overrides/` → presets → extensions → core); prefer adding an override file over editing core templates.
 
 <!-- SPECKIT START -->
 For additional context about technologies to be used, project structure,
 shell commands, and other important information, read the current plan at
-`laravel/specs/001-password-reset-email/plan.md`.
+`laravel/specs/002-multi-tenant-database/plan.md`.
 <!-- SPECKIT END -->

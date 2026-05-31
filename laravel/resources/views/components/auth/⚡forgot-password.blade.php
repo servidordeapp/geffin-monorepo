@@ -43,44 +43,34 @@ new #[Layout('layouts.guest')] class extends Component {
 
 <div class="w-full">
     @if($status)
-        <div class="mb-5 t-body-sm" style="color: var(--color-semantic-success);">
-            {{ $status }}
-        </div>
+        <x-ui.alert variant="success" class="mb-5">{{ $status }}</x-ui.alert>
     @endif
 
     <form wire:submit="requestReset" class="space-y-5" novalidate>
-        <div class="space-y-1">
-            <p class="t-body-sm" style="color: var(--fg-2);">
-                {{ __('auth.forgot.subtitle') }}
-            </p>
-        </div>
+        <p class="t-body-sm" style="color: var(--fg-2);">
+            {{ __('auth.forgot.subtitle') }}
+        </p>
 
-        <label class="field w-full" for="email">
-            <span class="field-label">E-mail</span>
-            <input
-                type="email"
-                id="email"
-                wire:model="email"
-                class="input w-full @error('email') error @enderror"
-                placeholder="voce@escola.edu.br"
-                autofocus
-                autocomplete="email"
-            />
-            @error('email')
-                <span class="t-caption" style="color: var(--color-semantic-danger);">{{ $message }}</span>
-            @enderror
-        </label>
+        <x-ui.input
+            type="email"
+            name="email"
+            label="E-mail"
+            wire:model="email"
+            placeholder="voce@escola.edu.br"
+            autofocus
+            autocomplete="email"
+        />
 
-        <button type="submit" class="btn btn-primary w-full justify-center" wire:loading.attr="disabled">
+        <flux:button type="submit" variant="primary" class="w-full justify-center" :loading="false" wire:loading.attr="disabled" wire:target="requestReset">
             <span wire:loading.remove wire:target="requestReset" class="inline-flex items-center gap-2">
                 {{ __('auth.forgot.submit') }}
-                <i data-lucide="send" style="width:16px;height:16px;"></i>
+                <flux:icon name="paper-airplane" class="size-4" />
             </span>
             <span wire:loading wire:target="requestReset" class="inline-flex items-center gap-2">
-                <i data-lucide="loader-circle" class="animate-spin" style="width:16px;height:16px;"></i>
+                <flux:icon name="loading" class="size-4 animate-spin" />
                 {{ __('Enviando…') }}
             </span>
-        </button>
+        </flux:button>
 
         <p class="t-caption" style="text-align:center; color: var(--fg-3);">
             <a href="{{ route('login') }}" wire:navigate style="color: var(--fg-link); text-decoration: none;">

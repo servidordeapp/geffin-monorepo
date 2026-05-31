@@ -81,8 +81,17 @@ RUN apk add --no-cache \
         zip \
     && pecl install redis \
     && docker-php-ext-enable redis \
+    && pecl install pcov \
+    && docker-php-ext-enable pcov \
     && apk del .build-deps \
     && rm -rf /tmp/* /var/cache/apk/*
+
+# pcov enabled cluster-wide so Pest parallel workers (re-spawned PHP procs that
+# re-read ini, lose -d flags) inherit the driver. Dev image only.
+COPY <<'EOF' /usr/local/etc/php/conf.d/pcov.ini
+pcov.enabled=1
+pcov.directory=/var/www/html/app
+EOF
 
 # Composer binary (for runtime tasks like `composer dump`)
 COPY --from=composer:2.8 /usr/bin/composer /usr/bin/composer
