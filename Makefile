@@ -55,14 +55,13 @@ TEST_ENV := -e APP_ENV=testing -e DB_CONNECTION=sqlite -e DB_DATABASE=:memory: \
             -e CACHE_STORE=array -e SESSION_DRIVER=array -e QUEUE_CONNECTION=sync
 
 test:
-	$(COMPOSE) exec $(TEST_ENV) api sh -c "php artisan config:clear >/dev/null 2>&1 && php artisan view:clear >/dev/null 2>&1 && php artisan test $(filter-out $@,$(MAKECMDGOALS))"
+	$(COMPOSE) exec $(TEST_ENV) api sh -c "php artisan optimize:clear >/dev/null 2>&1 && php artisan test $(filter-out $@,$(MAKECMDGOALS))"
 
 # Coverage: enables pcov on-demand (extension shipped but not auto-loaded).
 # Fails when total line coverage is below $(COVERAGE_MIN).
 coverage:
 	$(COMPOSE) exec $(TEST_ENV) -e XDEBUG_MODE=off api sh -c "\
-	    php artisan config:clear >/dev/null 2>&1 && \
-	    php artisan route:clear >/dev/null 2>&1 && \
+	    php artisan optimize:clear >/dev/null 2>&1 && \
 	    php -d pcov.enabled=1 -d memory_limit=512M \
 	        artisan test --coverage --min=$(COVERAGE_MIN) $(filter-out $@,$(MAKECMDGOALS))"
 

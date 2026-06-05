@@ -8,9 +8,14 @@
 # pattern, which includes CREATE/DROP DATABASE for matching names.
 #
 # Runs once on a fresh data volume, after the entrypoint has created MYSQL_USER.
+#
+# Also provisions the test database (geffin_test, used by phpunit) and grants
+# the app user privileges on it plus the `tenant%` databases that tests spin up.
 set -e
 
 mysql -uroot -p"${MYSQL_ROOT_PASSWORD}" <<SQL
+CREATE DATABASE IF NOT EXISTS \`geffin_test\` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+GRANT ALL PRIVILEGES ON \`geffin_test\`.* TO '${MYSQL_USER}'@'%';
 GRANT ALL PRIVILEGES ON \`tenant%\`.* TO '${MYSQL_USER}'@'%';
 FLUSH PRIVILEGES;
 SQL
