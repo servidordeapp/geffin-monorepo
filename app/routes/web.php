@@ -9,3 +9,7 @@ Route::get('/', function () {
 });
 
 Route::livewire('/login', 'pages::auth.login')->name('login');
+
+Route::get('/dashboard', function () {
+    return 'Dashboard';
+})->name('dashboard');
