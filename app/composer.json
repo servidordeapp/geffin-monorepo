@@ -77,10 +77,13 @@
         "pint": [
             "vendor/bin/pint --config=pint.json --verbose"
         ],
+        "coverage": [
+            "vendor/bin/pest --coverage --min=90"
+        ],
         "quality": [
             "@composer stan",
             "@composer pint",
-            "@composer test"
+            "@composer coverage"
         ]
     },
     "extra": {
