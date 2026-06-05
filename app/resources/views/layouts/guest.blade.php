@@ -10,7 +10,7 @@
 
         @livewireStyles
     </head>
-    <body class="bg-base-100">
+    <body class="bg-base-200 font-sans antialiased">
         <main class="grid min-h-screen grid-cols-1 lg:grid-cols-[1.1fr_1fr]">
             {{-- LEFT: brand storytelling --}}
             <aside
@@ -24,7 +24,7 @@
                             [background-size:56px_56px]
                             [mask-image:radial-gradient(80%_60%_at_30%_40%,#000_30%,transparent_75%)]"></div>
 
-                <div class="relative z-10 max-w-[520px]">
+                <div class="relative mb-2 z-10 max-w-[520px]">
                     <div class="inline-flex items-center gap-2.5 font-mono text-xs uppercase tracking-[0.14em] text-white/70">
                         <span class="inline-flex size-7 items-center justify-center rounded-lg text-white shadow-lg shadow-primary/40
                                      bg-gradient-to-br from-primary to-success">
@@ -37,7 +37,7 @@
                         01 — Hub financeiro escolar
                     </div>
 
-                    <h2 class="mt-[18px] text-[clamp(2.4rem,3.4vw,3.4rem)] font-bold leading-[1.04] tracking-tight text-white">
+                    <h2 class="mt-[18px] font-display text-[clamp(2.4rem,3.4vw,3.4rem)] font-bold leading-[1.04] tracking-tight text-white">
                         Gestão financeira
                         <em class="bg-gradient-to-r from-[#93C5FD] to-[#6EE7B7] bg-clip-text not-italic text-transparent">auditável</em>
                         para escolas que não podem errar.
@@ -78,7 +78,7 @@
                     </div>
                 </div>
 
-                <div class="mt-4 relative z-10 flex items-center justify-between font-mono text-[11px] uppercase tracking-[0.1em] text-slate-400/70">
+                <div class="relative z-10 flex items-center justify-between font-mono text-[11px] uppercase tracking-[0.1em] text-slate-400/70">
                     <span>© {{ date('Y') }} {{ config('app.name', 'Geffin') }}</span>
                     <span>v{{ config('app.version', '0.1.0') }} · São Paulo</span>
                 </div>
@@ -101,7 +101,7 @@
                 <div class="flex flex-1 items-center">
                     <div class="mx-auto w-full max-w-[420px]">
                         <div class="font-mono text-[11px] uppercase tracking-[0.22em] text-primary">{{ $eyebrow ?? 'Acesso restrito' }}</div>
-                        <h1 class="mt-2.5 text-[2rem] font-bold leading-tight tracking-tight text-base-content">{{ $heading ?? 'Entre na sua conta' }}</h1>
+                        <h1 class="mt-2.5 font-display text-[2rem] font-bold leading-tight tracking-tight text-base-content">{{ $heading ?? 'Entre na sua conta' }}</h1>
                         <p class="mt-2.5 text-[0.9375rem] leading-relaxed text-base-content/70">
                             {{ $subtitle ?? 'Use suas credenciais institucionais para acessar o painel.' }}
                         </p>
