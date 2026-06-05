@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" data-theme="light">
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -19,7 +19,7 @@
                        bg-[linear-gradient(160deg,#051C3D_0%,#0a2a52_55%,#07224A_100%)]"
             >
                 {{-- subtle grid overlay --}}
-                <div class="pointer-events-none absolute inset-0 opacity-60
+                <div class="pointer-events-none absolute inset-0 opacity-90
                             [background-image:linear-gradient(rgba(255,255,255,0.04)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.04)_1px,transparent_1px)]
                             [background-size:56px_56px]
                             [mask-image:radial-gradient(80%_60%_at_30%_40%,#000_30%,transparent_75%)]"></div>
