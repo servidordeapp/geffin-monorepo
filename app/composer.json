@@ -80,6 +80,9 @@
         "coverage": [
             "vendor/bin/pest --coverage --min=90"
         ],
+        "coverage-html": [
+            "vendor/bin/pest --coverage --min=90 --coverage-html=storage/coverage"
+        ],
         "quality": [
             "@composer stan",
             "@composer pint",
