@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use App\Modules\Tenancy\Providers\TenancyModuleServiceProvider;
+use App\Modules\Tenant\Auth\Providers\TenantAuthServiceProvider;
 use App\Providers\AppServiceProvider;
 use App\Providers\TenancyServiceProvider;
 use Fruitcake\LaravelDebugbar\ServiceProvider;
@@ -12,4 +13,5 @@ return [
     ServiceProvider::class,
     TenancyServiceProvider::class,
     TenancyModuleServiceProvider::class,
+    TenantAuthServiceProvider::class,
 ];

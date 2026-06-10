@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 use Livewire\Livewire;
+use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
 
 class TenancyModuleServiceProvider extends ServiceProvider
 {
@@ -22,6 +23,7 @@ class TenancyModuleServiceProvider extends ServiceProvider
         $this->registerGates();
         $this->loadRoutes();
         $this->registerLivewireComponents();
+        $this->makeLivewireTenantAware();
 
         $kernel = $this->app->make(Kernel::class);
         $kernel->prependToMiddlewarePriority(BlockDeletedTenant::class);
@@ -46,5 +48,29 @@ class TenancyModuleServiceProvider extends ServiceProvider
     protected function registerLivewireComponents(): void
     {
         Livewire::addLocation(classNamespace: 'App\Modules\Tenancy\Livewire');
+    }
+
+    /**
+     * Make Livewire's update endpoint tenant-aware.
+     *
+     * By default Livewire registers its update route with only the `web`
+     * middleware, so the AJAX call that drives every tenant Livewire component
+     * (e.g. the login form) runs in the central context: the session — and with
+     * it the CSRF token saved during the tenant GET — is read from the central
+     * database, producing a 419 "Página expirada" and making tenant login
+     * impossible. Wrapping the route in the same tenancy middleware as the
+     * universal routes in routes/web.php keeps it on the central domain (via the
+     * BlockDeletedTenant passthrough + InitializeTenancyByDomain onFail handler)
+     * while initializing tenancy on tenant domains.
+     */
+    protected function makeLivewireTenantAware(): void
+    {
+        Livewire::setUpdateRoute(function ($handle, string $updatePath) {
+            return Route::post($updatePath, $handle)->middleware([
+                'web',
+                BlockDeletedTenant::class,
+                InitializeTenancyByDomain::class,
+            ]);
+        });
     }
 }

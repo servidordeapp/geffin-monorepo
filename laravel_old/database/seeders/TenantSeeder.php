@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Database\Seeders;
 
-use App\Models\User;
 use App\Modules\Tenancy\Enums\TenantStatusEnum;
+use App\Modules\Tenant\Auth\Models\TenantUser;
 use App\Modules\Tenancy\Models\Tenant;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Artisan;
@@ -55,7 +55,7 @@ class TenantSeeder extends Seeder
             ]);
 
             $tenant->run(function () use ($data): void {
-                User::factory()->create([
+                TenantUser::factory()->create([
                     'email' => 'user@'.$data['domain'],
                 ]);
             });

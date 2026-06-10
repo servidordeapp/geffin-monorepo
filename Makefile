@@ -63,7 +63,7 @@ coverage:
 	$(COMPOSE) exec $(TEST_ENV) -e XDEBUG_MODE=off api sh -c "\
 	    php artisan optimize:clear >/dev/null 2>&1 && \
 	    php -d pcov.enabled=1 -d memory_limit=512M \
-	        artisan test --coverage --min=$(COVERAGE_MIN) $(filter-out $@,$(MAKECMDGOALS))"
+	         $(COVERAGE_MIN) $(filter-out $@,$(MAKECMDGOALS))"
 
 pint:
 	$(API) vendor/bin/pint
