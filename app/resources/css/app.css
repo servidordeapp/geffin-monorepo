@@ -57,21 +57,3 @@
     /* Missing v4 tracking step used by typography scale */
     --tracking-snug: -0.0125em;
 }
-
-@layer components {
-    /* ── Typography ── */
-    .t-display  { font-family: var(--font-display); font-size: var(--text-5xl); font-weight: 700; line-height: var(--leading-tight);  letter-spacing: var(--tracking-tight); color: var(--fg-1); }
-    .t-h1       { font-family: var(--font-display); font-size: var(--text-4xl); font-weight: 700; line-height: var(--leading-tight);  letter-spacing: var(--tracking-tight); color: var(--fg-1); }
-    .t-h2       { font-family: var(--font-display); font-size: var(--text-3xl); font-weight: 700; line-height: var(--leading-snug);   letter-spacing: var(--tracking-snug);  color: var(--fg-1); }
-    .t-h3       { font-size: var(--text-2xl);  font-weight: 600; line-height: var(--leading-snug);   color: var(--fg-1); }
-    .t-h4       { font-size: var(--text-xl);   font-weight: 600; line-height: var(--leading-snug);   color: var(--fg-1); }
-    .t-h5       { font-size: var(--text-lg);   font-weight: 600; line-height: var(--leading-snug);   color: var(--fg-1); }
-    .t-body-lg  { font-size: var(--text-lg);   font-weight: 400; line-height: var(--leading-normal); color: var(--fg-1); }
-    .t-body     { font-size: var(--text-base); font-weight: 400; line-height: var(--leading-normal); color: var(--fg-1); }
-    .t-body-sm  { font-size: var(--text-sm);   font-weight: 400; line-height: var(--leading-normal); color: var(--fg-2); }
-    .t-label    { font-size: var(--text-sm);   font-weight: 500; line-height: var(--leading-snug);   color: var(--fg-1); }
-    .t-caption  { font-size: var(--text-xs);   font-weight: 500; line-height: var(--leading-snug);   color: var(--fg-2); }
-    .t-overline { font-size: var(--text-xs);   font-weight: 600; line-height: 1; letter-spacing: var(--tracking-wide); text-transform: uppercase; color: var(--fg-2); }
-    .t-mono     { font-family: var(--font-mono); font-size: var(--text-sm); font-weight: 500; font-variant-numeric: tabular-nums; color: var(--fg-1); }
-    .t-numeric  { font-variant-numeric: tabular-nums; font-feature-settings: "tnum" 1, "lnum" 1; }
-}

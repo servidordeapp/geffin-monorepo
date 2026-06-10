@@ -5,7 +5,7 @@ use Livewire\Attributes\Layout;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
 
-new #[Layout('layouts.guest', ['eyebrow' => 'Acesso restrito', 'heading' => 'Entre na sua conta', 'subtitle' => 'Use suas credenciais institucionais para acessar o painel.'])] class extends Component {
+new #[Layout('components.layouts.guest', ['eyebrow' => 'Acesso restrito', 'heading' => 'Entre na sua conta', 'subtitle' => 'Use suas credenciais institucionais para acessar o painel.'])] class extends Component {
     #[Validate('required|email')]
     public string $email = '';
 
@@ -32,6 +32,16 @@ new #[Layout('layouts.guest', ['eyebrow' => 'Acesso restrito', 'heading' => 'Ent
 ?>
 
 <div class="w-full">
+    @if (session('status'))
+        <div class="alert alert-success mb-4" role="status">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
+                stroke="currentColor" class="size-5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" />
+            </svg>
+            <span>{{ session('status') }}</span>
+        </div>
+    @endif
+
     <form wire:submit="login" class="space-y-4" novalidate>
         <fieldset class="fieldset">
             <legend class="fieldset-legend">E-mail institucional</legend>
@@ -45,7 +55,7 @@ new #[Layout('layouts.guest', ['eyebrow' => 'Acesso restrito', 'heading' => 'Ent
         <fieldset class="fieldset">
             <legend class="fieldset-legend flex w-full items-center justify-between">
                 <span>Senha</span>
-                <a href="#" wire:navigate class="link link-primary text-xs font-medium no-underline">
+                <a href="{{ route('password.request') }}" wire:navigate class="link link-primary text-xs font-medium no-underline">
                     Esqueci minha senha
                 </a>
             </legend>
