@@ -2,8 +2,17 @@
 
 declare(strict_types=1);
 
-test('the application returns a successful response', function () {
-    $response = $this->get('/');
+use App\Models\User;
 
-    $response->assertStatus(200);
+test('the application returns a successful response', function () {
+    $user = User::factory()->create();
+
+    $this->actingAs($user)
+        ->get('/')
+        ->assertRedirect(route('dashboard'));
+});
+
+test('unauthenticated user is redirected to login', function () {
+    $this->get('/')
+        ->assertRedirect(route('login'));
 });
