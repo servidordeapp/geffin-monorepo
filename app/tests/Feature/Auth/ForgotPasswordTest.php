@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 use App\Models\User;
-use Illuminate\Auth\Notifications\ResetPassword;
+use App\Notifications\ResetPasswordNotification;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Notification;
 use Livewire\Livewire;
@@ -47,7 +47,30 @@ test('reset link is sent to a registered email', function () {
         ->assertHasNoErrors()
         ->assertSet('sent', true);
 
-    Notification::assertSentTo($user, ResetPassword::class);
+    Notification::assertSentTo($user, ResetPasswordNotification::class);
+});
+
+test('reset link email is written in portuguese and links to the reset screen', function () {
+    Notification::fake();
+
+    $user = User::factory()->create();
+
+    Livewire::test('pages::auth.forgot-password')
+        ->set('email', $user->email)
+        ->call('sendResetLink');
+
+    Notification::assertSentTo($user, ResetPasswordNotification::class, function (ResetPasswordNotification $notification) use ($user) {
+        $mail = $notification->toMail($user);
+
+        expect($mail->subject)->toBe('Redefinição de senha — '.config('app.name'))
+            ->and($mail->actionText)->toBe('Redefinir senha')
+            ->and($mail->actionUrl)->toBe(route('password.reset', [
+                'token' => $notification->token,
+                'email' => $user->email,
+            ]));
+
+        return true;
+    });
 });
 
 test('unknown email shows the same confirmation without sending anything', function () {
