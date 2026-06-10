@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+use App\Http\Controllers\TenantController;
+use App\Http\Controllers\TenantDomainController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -14,6 +16,13 @@ Route::middleware('auth')->group(function () {
     Route::get('/', fn () => redirect()->route('dashboard'));
 
     Route::get('/painel', fn () => view('pages.dashboard'))->name('dashboard');
+
+    Route::resource('tenants', TenantController::class)
+        ->only(['index', 'create', 'store', 'edit', 'update']);
+
+    Route::resource('tenants.domains', TenantDomainController::class)
+        ->only(['store', 'destroy'])
+        ->scoped();
 
     Route::post('/deslogar', function (Request $request) {
         Auth::logout();

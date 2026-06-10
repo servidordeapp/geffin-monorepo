@@ -21,5 +21,7 @@ class DatabaseSeeder extends Seeder
             'name'  => 'Test User',
             'email' => 'teste@geffin.local',
         ]);
+
+        $this->call(TenantSeeder::class);
     }
 }
