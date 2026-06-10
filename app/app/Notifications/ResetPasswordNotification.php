@@ -14,15 +14,17 @@ class ResetPasswordNotification extends ResetPassword
      */
     protected function buildMailMessage($url): MailMessage
     {
-        $expireMinutes = config('auth.passwords.'.config('auth.defaults.passwords').'.expire');
+        $broker        = config()->string('auth.defaults.passwords');
+        $expireMinutes = config()->integer("auth.passwords.{$broker}.expire");
+        $appName       = config()->string('app.name');
 
-        return (new MailMessage)
-            ->subject('Redefinição de senha — '.config('app.name'))
+        return (new MailMessage())
+            ->subject('Redefinição de senha — '.$appName)
             ->greeting('Olá!')
             ->line('Recebemos uma solicitação de redefinição de senha para a sua conta.')
             ->action('Redefinir senha', $url)
             ->line("Este link expira em {$expireMinutes} minutos.")
             ->line('Se você não solicitou a redefinição, nenhuma ação é necessária.')
-            ->salutation('Equipe '.config('app.name'));
+            ->salutation('Equipe '.$appName);
     }
 }

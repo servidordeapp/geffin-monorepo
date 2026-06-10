@@ -62,7 +62,7 @@ test('password can not be reset with an invalid token', function () {
 });
 
 test('password can be reset with a valid token', function () {
-    $user = User::factory()->create();
+    $user  = User::factory()->create();
     $token = Password::createToken($user);
 
     Livewire::test('pages::auth.reset-password', ['token' => $token])
@@ -77,7 +77,7 @@ test('password can be reset with a valid token', function () {
 });
 
 test('user can authenticate with the new password after reset', function () {
-    $user = User::factory()->create();
+    $user  = User::factory()->create();
     $token = Password::createToken($user);
 
     Livewire::test('pages::auth.reset-password', ['token' => $token])
