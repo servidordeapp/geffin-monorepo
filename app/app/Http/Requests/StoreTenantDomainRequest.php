@@ -14,7 +14,7 @@ class StoreTenantDomainRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return $this->user()->can('update', $this->route('tenant'));
+        return $this->user()?->can('update', $this->route('tenant')) ?? false;
     }
 
     /**

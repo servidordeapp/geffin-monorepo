@@ -62,12 +62,15 @@ test('reset link email is written in portuguese and links to the reset screen', 
     Notification::assertSentTo($user, ResetPasswordNotification::class, function (ResetPasswordNotification $notification) use ($user) {
         $mail = $notification->toMail($user);
 
+        // The reset route is registered once per central domain, so the
+        // generated host varies; only the path and query are deterministic.
         expect($mail->subject)->toBe('Redefinição de senha — '.config('app.name'))
             ->and($mail->actionText)->toBe('Redefinir senha')
-            ->and($mail->actionUrl)->toBe(route('password.reset', [
+            ->and($mail->actionUrl)->toEndWith(route('password.reset', [
                 'token' => $notification->token,
                 'email' => $user->email,
-            ]));
+            ], absolute: false))
+            ->and(parse_url($mail->actionUrl, PHP_URL_HOST))->toBeIn(config('tenancy.central_domains'));
 
         return true;
     });
