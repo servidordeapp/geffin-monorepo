@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Enums\TenantStatus;
+use App\Enums\TenantStatusEnum;
 use App\Models\Tenant;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -79,11 +79,11 @@ test('a tenant is created with active status by default', function () {
 
     $tenant = Tenant::all()->firstWhere('name', 'Escola Beta');
 
-    expect($tenant->status)->toBe(TenantStatus::Ativo);
+    expect($tenant->status)->toBe(TenantStatusEnum::Ativo);
 
     $this->assertDatabaseHas('tenants', [
         'id'     => $tenant->id,
-        'status' => TenantStatus::Ativo->value,
+        'status' => TenantStatusEnum::Ativo->value,
     ]);
 });
 
@@ -126,7 +126,7 @@ test('a tenant name can be updated', function () {
     $this->actingAs($this->user)
         ->put(route('tenants.update', $tenant), [
             'name'   => 'Escola Alfa Renomeada',
-            'status' => TenantStatus::Ativo->value,
+            'status' => TenantStatusEnum::Ativo->value,
         ])
         ->assertRedirect(route('tenants.index'));
 
@@ -140,11 +140,11 @@ test('a tenant can be suspended', function () {
     $this->actingAs($this->user)
         ->put(route('tenants.update', $tenant), [
             'name'   => 'Escola Alfa',
-            'status' => TenantStatus::Suspenso->value,
+            'status' => TenantStatusEnum::Suspenso->value,
         ])
         ->assertRedirect(route('tenants.index'));
 
-    expect($tenant->refresh()->status)->toBe(TenantStatus::Suspenso);
+    expect($tenant->refresh()->status)->toBe(TenantStatusEnum::Suspenso);
 });
 
 test('status must be a valid value to update a tenant', function () {
@@ -158,7 +158,7 @@ test('status must be a valid value to update a tenant', function () {
         ])
         ->assertSessionHasErrors(['status']);
 
-    expect($tenant->refresh()->status)->toBe(TenantStatus::Ativo);
+    expect($tenant->refresh()->status)->toBe(TenantStatusEnum::Ativo);
 });
 
 test('tenant list shows the tenant status', function () {
@@ -178,7 +178,7 @@ test('updating a tenant does not change its domains', function () {
     $this->actingAs($this->user)
         ->put(route('tenants.update', $tenant), [
             'name'   => 'Escola Alfa Renomeada',
-            'status' => TenantStatus::Ativo->value,
+            'status' => TenantStatusEnum::Ativo->value,
             'domain' => 'hacker.localhost',
         ])
         ->assertRedirect(route('tenants.index'));
