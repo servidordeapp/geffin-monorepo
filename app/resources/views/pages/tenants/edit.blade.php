@@ -36,7 +36,7 @@
                     <legend class="fieldset-legend">Status</legend>
                     <select name="status" required
                         class="select w-full @error('status') select-error @enderror">
-                        @foreach (\App\Enums\TenantStatus::cases() as $status)
+                        @foreach (\App\Enums\TenantStatusEnum::cases() as $status)
                             <option value="{{ $status->value }}"
                                 @selected(old('status', $tenant->status->value) === $status->value)>
                                 {{ $status->label() }}

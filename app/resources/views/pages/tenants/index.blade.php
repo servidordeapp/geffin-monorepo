@@ -41,8 +41,7 @@
                         <tr>
                             <td class="font-medium text-base-content">{{ $tenant->name }}</td>
                             <td>
-                                <span
-                                    class="badge badge-soft {{ $tenant->status === \App\Enums\TenantStatus::Ativo ? 'badge-success' : 'badge-warning' }}">
+                                <span class="{{ $tenant->status->badge() }}">
                                     {{ $tenant->status->label() }}
                                 </span>
                             </td>
