@@ -35,6 +35,16 @@ test('tenant list shows existing tenants and their domains', function () {
         ->assertSee('alfa2.localhost');
 });
 
+test('tenant list links each domain to the tenant site', function () {
+    Tenant::factory()->create(['name' => 'Escola Alfa'])
+        ->domains()->create(['domain' => 'alfa.localhost']);
+
+    $this->actingAs($this->user)
+        ->get(route('tenants.index'))
+        ->assertOk()
+        ->assertSee('href="http://alfa.localhost"', escape: false);
+});
+
 test('create form can be rendered', function () {
     $this->actingAs($this->user)
         ->get(route('tenants.create'))
