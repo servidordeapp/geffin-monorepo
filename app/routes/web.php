@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use App\Http\Controllers\TenantController;
 use App\Http\Controllers\TenantDomainController;
+use App\Models\Tenant;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -15,7 +16,9 @@ Route::livewire('/redefinir-senha/{token}', 'pages::auth.reset-password')->name(
 Route::middleware('auth')->group(function () {
     Route::get('/', fn () => redirect()->route('dashboard'));
 
-    Route::get('/painel', fn () => view('pages.dashboard'))->name('dashboard');
+    Route::get('/painel', fn () => view('pages.dashboard', [
+        'tenantCount' => Tenant::count(),
+    ]))->name('dashboard');
 
     Route::resource('tenants', TenantController::class)
         ->only(['index', 'create', 'store', 'edit', 'update']);
