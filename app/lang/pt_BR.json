@@ -194,5 +194,18 @@
   "Ensure your account is using a long, random password to stay secure": "Certifique-se de que sua conta esteja usando uma senha longa e aleatória para permanecer segura",
   "Log in to your account": "Entrar na sua conta",
   "Enter your email and password below to log in": "Digite seu e-mail e senha abaixo para entrar",
-  "Don't have an account?": "Não tem uma conta?"
+  "Don't have an account?": "Não tem uma conta?",
+  "Error": "Erro",
+  "Back to dashboard": "Voltar para o dashboard",
+  "Back to home": "Voltar para o início",
+  "Go back": "Voltar à página anterior",
+  "Something went wrong. Use the buttons below to get back on track.": "Algo não saiu como esperado. Use os botões abaixo para voltar ao caminho.",
+  "The page you are looking for does not exist or has been moved.": "A página que você procura não existe ou foi movida.",
+  "You need to sign in to access this page.": "Você precisa entrar na sua conta para acessar esta página.",
+  "This feature requires an active payment.": "Este recurso requer um pagamento ativo.",
+  "You do not have permission to access this page.": "Você não tem permissão para acessar esta página.",
+  "Your session has expired. Please go back and try again.": "Sua sessão expirou. Volte e tente novamente.",
+  "You have made too many requests. Please wait a few moments and try again.": "Você fez muitas solicitações em pouco tempo. Aguarde alguns instantes e tente novamente.",
+  "An unexpected error occurred on our side. Please try again shortly.": "Ocorreu um erro inesperado do nosso lado. Tente novamente em instantes.",
+  "We are performing scheduled maintenance and will be back shortly.": "Estamos em manutenção programada e voltaremos em instantes."
 }
