@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Enums\TenantStatus;
 use App\Models\Tenant;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -68,6 +69,24 @@ test('a tenant can be created with a domain', function () {
     ]);
 });
 
+test('a tenant is created with active status by default', function () {
+    $this->actingAs($this->user)
+        ->post(route('tenants.store'), [
+            'name'   => 'Escola Beta',
+            'domain' => 'beta.localhost',
+        ])
+        ->assertRedirect(route('tenants.index'));
+
+    $tenant = Tenant::all()->firstWhere('name', 'Escola Beta');
+
+    expect($tenant->status)->toBe(TenantStatus::Ativo);
+
+    $this->assertDatabaseHas('tenants', [
+        'id'     => $tenant->id,
+        'status' => TenantStatus::Ativo->value,
+    ]);
+});
+
 test('name and domain are required to create a tenant', function () {
     $this->actingAs($this->user)
         ->post(route('tenants.store'), [])
@@ -106,11 +125,50 @@ test('a tenant name can be updated', function () {
 
     $this->actingAs($this->user)
         ->put(route('tenants.update', $tenant), [
-            'name' => 'Escola Alfa Renomeada',
+            'name'   => 'Escola Alfa Renomeada',
+            'status' => TenantStatus::Ativo->value,
         ])
         ->assertRedirect(route('tenants.index'));
 
     expect($tenant->refresh()->name)->toBe('Escola Alfa Renomeada');
+});
+
+test('a tenant can be suspended', function () {
+    $tenant = Tenant::factory()->create(['name' => 'Escola Alfa']);
+    $tenant->domains()->create(['domain' => 'alfa.localhost']);
+
+    $this->actingAs($this->user)
+        ->put(route('tenants.update', $tenant), [
+            'name'   => 'Escola Alfa',
+            'status' => TenantStatus::Suspenso->value,
+        ])
+        ->assertRedirect(route('tenants.index'));
+
+    expect($tenant->refresh()->status)->toBe(TenantStatus::Suspenso);
+});
+
+test('status must be a valid value to update a tenant', function () {
+    $tenant = Tenant::factory()->create(['name' => 'Escola Alfa']);
+    $tenant->domains()->create(['domain' => 'alfa.localhost']);
+
+    $this->actingAs($this->user)
+        ->put(route('tenants.update', $tenant), [
+            'name'   => 'Escola Alfa',
+            'status' => 'cancelado',
+        ])
+        ->assertSessionHasErrors(['status']);
+
+    expect($tenant->refresh()->status)->toBe(TenantStatus::Ativo);
+});
+
+test('tenant list shows the tenant status', function () {
+    Tenant::factory()->suspenso()->create(['name' => 'Escola Alfa'])
+        ->domains()->create(['domain' => 'alfa.localhost']);
+
+    $this->actingAs($this->user)
+        ->get(route('tenants.index'))
+        ->assertOk()
+        ->assertSee('Suspenso');
 });
 
 test('updating a tenant does not change its domains', function () {
@@ -120,6 +178,7 @@ test('updating a tenant does not change its domains', function () {
     $this->actingAs($this->user)
         ->put(route('tenants.update', $tenant), [
             'name'   => 'Escola Alfa Renomeada',
+            'status' => TenantStatus::Ativo->value,
             'domain' => 'hacker.localhost',
         ])
         ->assertRedirect(route('tenants.index'));

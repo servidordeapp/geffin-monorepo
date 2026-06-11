@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Database\Factories;
 
+use App\Enums\TenantStatus;
 use App\Models\Tenant;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -20,7 +21,18 @@ class TenantFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => fake()->company(),
+            'name'   => fake()->company(),
+            'status' => TenantStatus::Ativo,
         ];
+    }
+
+    /**
+     * Indicate that the tenant is suspended.
+     */
+    public function suspenso(): static
+    {
+        return $this->state(fn (array $attributes): array => [
+            'status' => TenantStatus::Suspenso,
+        ]);
     }
 }

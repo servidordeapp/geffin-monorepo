@@ -30,6 +30,7 @@
                 <thead>
                     <tr class="font-mono text-[11px] uppercase tracking-[0.14em] text-base-content/60">
                         <th>Nome</th>
+                        <th>Status</th>
                         <th>Domínios</th>
                         <th>Criado em</th>
                         <th class="text-right">Ações</th>
@@ -39,6 +40,12 @@
                     @forelse ($tenants as $tenant)
                         <tr>
                             <td class="font-medium text-base-content">{{ $tenant->name }}</td>
+                            <td>
+                                <span
+                                    class="badge badge-soft {{ $tenant->status === \App\Enums\TenantStatus::Ativo ? 'badge-success' : 'badge-warning' }}">
+                                    {{ $tenant->status->label() }}
+                                </span>
+                            </td>
                             <td>
                                 <div class="flex flex-wrap gap-1.5">
                                     @forelse ($tenant->domains as $domain)
@@ -64,7 +71,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="4" class="py-10 text-center text-base-content/60">
+                            <td colspan="5" class="py-10 text-center text-base-content/60">
                                 Nenhum tenant cadastrado.
                             </td>
                         </tr>

@@ -32,6 +32,22 @@
                     @enderror
                 </fieldset>
 
+                <fieldset class="fieldset">
+                    <legend class="fieldset-legend">Status</legend>
+                    <select name="status" required
+                        class="select w-full @error('status') select-error @enderror">
+                        @foreach (\App\Enums\TenantStatus::cases() as $status)
+                            <option value="{{ $status->value }}"
+                                @selected(old('status', $tenant->status->value) === $status->value)>
+                                {{ $status->label() }}
+                            </option>
+                        @endforeach
+                    </select>
+                    @error('status')
+                        <p class="label text-error">{{ $message }}</p>
+                    @enderror
+                </fieldset>
+
                 <div class="flex items-center justify-end gap-2 pt-2">
                     <a href="{{ route('tenants.index') }}" class="btn btn-ghost">Cancelar</a>
                     <button type="submit" class="btn btn-primary">Salvar</button>

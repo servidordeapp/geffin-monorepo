@@ -66,7 +66,10 @@ class TenantController extends Controller
      */
     public function update(UpdateTenantRequest $request, Tenant $tenant): RedirectResponse
     {
-        $tenant->update(['name' => $request->validated('name')]);
+        $tenant->update([
+            'name'   => $request->validated('name'),
+            'status' => $request->validated('status'),
+        ]);
 
         return redirect()
             ->route('tenants.index')
