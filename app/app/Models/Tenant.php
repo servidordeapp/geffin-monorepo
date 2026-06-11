@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
-use App\Enums\TenantStatus;
+use App\Enums\TenantStatusEnum;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -26,7 +26,7 @@ class Tenant extends BaseTenant implements TenantWithDatabase
      * @var array<string, mixed>
      */
     protected $attributes = [
-        'status' => TenantStatus::Ativo->value,
+        'status' => TenantStatusEnum::Ativo->value,
     ];
 
     /**
@@ -35,7 +35,7 @@ class Tenant extends BaseTenant implements TenantWithDatabase
     protected function casts(): array
     {
         return [
-            'status' => TenantStatus::class,
+            'status' => TenantStatusEnum::class,
         ];
     }
 

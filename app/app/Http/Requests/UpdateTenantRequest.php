@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Requests;
 
-use App\Enums\TenantStatus;
+use App\Enums\TenantStatusEnum;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
@@ -28,7 +28,7 @@ class UpdateTenantRequest extends FormRequest
     {
         return [
             'name'   => ['required', 'string', 'max:255'],
-            'status' => ['required', Rule::enum(TenantStatus::class)],
+            'status' => ['required', Rule::enum(TenantStatusEnum::class)],
         ];
     }
 }

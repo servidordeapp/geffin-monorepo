@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Database\Factories;
 
-use App\Enums\TenantStatus;
+use App\Enums\TenantStatusEnum;
 use App\Models\Tenant;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -22,7 +22,7 @@ class TenantFactory extends Factory
     {
         return [
             'name'   => fake()->company(),
-            'status' => TenantStatus::Ativo,
+            'status' => TenantStatusEnum::Ativo,
         ];
     }
 
@@ -32,7 +32,7 @@ class TenantFactory extends Factory
     public function suspenso(): static
     {
         return $this->state(fn (array $attributes): array => [
-            'status' => TenantStatus::Suspenso,
+            'status' => TenantStatusEnum::Suspenso,
         ]);
     }
 }

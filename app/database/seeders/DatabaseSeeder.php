@@ -22,6 +22,8 @@ class DatabaseSeeder extends Seeder
             'email' => 'teste@geffin.local',
         ]);
 
-        $this->call(TenantSeeder::class);
+        $this->call([
+            // TenantSeeder::class,
+        ]);
     }
 }
