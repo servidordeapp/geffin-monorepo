@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models\Tenant;
 
-use App\Notifications\ResetPasswordNotification;
+use App\Notifications\Tenant\TenantResetPasswordNotification;
 use Database\Factories\Tenant\TenantUserFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
@@ -30,7 +30,7 @@ class TenantUser extends Authenticatable
      */
     public function sendPasswordResetNotification(#[\SensitiveParameter] $token): void
     {
-        $this->notify(new ResetPasswordNotification($token));
+        $this->notify(new TenantResetPasswordNotification($token));
     }
 
     /**

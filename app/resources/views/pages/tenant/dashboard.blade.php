@@ -7,6 +7,8 @@
         <title>Painel · {{ tenant('name') ?? config('app.name') }}</title>
 
         @vite(['resources/css/app.css', 'resources/js/app.js'])
+
+        @livewireStyles
     </head>
     <body class="bg-base-200 font-sans antialiased">
         <main class="mx-auto w-full max-w-3xl px-6 py-12">
@@ -23,5 +25,7 @@
                 <button type="submit" class="btn btn-outline btn-sm">Sair</button>
             </form>
         </main>
+
+        @livewireScripts
     </body>
 </html>

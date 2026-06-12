@@ -28,6 +28,8 @@ Route::middleware([
     Route::get('/', fn () => redirect()->route('tenant.dashboard'));
 
     Route::livewire('/logar', 'pages::tenant.auth.login')->name('login');
+    Route::livewire('/esqueci-senha', 'pages::tenant.auth.forgot-password')->name('password.request');
+    Route::livewire('/redefinir-senha/{token}', 'pages::tenant.auth.reset-password')->name('password.reset');
 
     Route::middleware('auth:tenant')->group(function () {
         Route::get('/painel', fn () => view('pages.tenant.dashboard'))->name('dashboard');

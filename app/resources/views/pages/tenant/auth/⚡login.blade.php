@@ -53,7 +53,12 @@ new #[Layout('components.layouts.tenant.guest', ['eyebrow' => 'Acesso restrito',
         </fieldset>
 
         <fieldset class="fieldset">
-            <legend class="fieldset-legend">Senha</legend>
+            <legend class="fieldset-legend flex w-full items-center justify-between">
+                <span>Senha</span>
+                <a href="{{ route('tenant.password.request') }}" wire:navigate class="link link-primary text-xs font-medium no-underline">
+                    Esqueci minha senha
+                </a>
+            </legend>
             <input type="password" wire:model="password" placeholder="••••••••" autocomplete="current-password"
                 class="input w-full @error('password') input-error @enderror" />
             @error('password')
