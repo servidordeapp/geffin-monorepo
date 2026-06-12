@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
 use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
@@ -22,8 +24,21 @@ Route::middleware([
     'web',
     InitializeTenancyByDomain::class,
     PreventAccessFromCentralDomains::class,
-])->group(function () {
-    Route::get('/', function () {
-        return 'This is your multi-tenant application. The id of the current tenant is ' . tenant('id');
+])->name('tenant.')->group(function () {
+    Route::get('/', fn () => redirect()->route('tenant.dashboard'));
+
+    Route::livewire('/logar', 'pages::tenant.auth.login')->name('login');
+
+    Route::middleware('auth:tenant')->group(function () {
+        Route::get('/painel', fn () => view('pages.tenant.dashboard'))->name('dashboard');
+
+        Route::post('/deslogar', function (Request $request) {
+            Auth::guard('tenant')->logout();
+
+            $request->session()->invalidate();
+            $request->session()->regenerateToken();
+
+            return redirect()->route('tenant.login');
+        })->name('logout');
     });
 });
